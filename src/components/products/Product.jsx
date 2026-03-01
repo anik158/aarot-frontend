@@ -7,6 +7,8 @@ import ColorSelector from './ColorSelector';
 import SizeSelector from './SizeSelector';
 import QuantitySelector from './QuantitySelector';
 import ProductTabs from './ProductTabs';
+import {useDispatch} from 'react-redux';
+import {addToCart} from "../../redux/slices/cartSlice.js";
 
 const Product = () => {
   const { productId } = useParams();
@@ -16,6 +18,7 @@ const Product = () => {
   const [selectedSize, setSelectedSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -47,15 +50,6 @@ const Product = () => {
     }
   };
 
-  const handleAddToCart = () => {
-    const cartItem = {
-      productId: product.id,
-      quantity,
-      colorId: selectedColor,
-      sizeId: selectedSize,
-    };
-    console.log('Adding to cart:', cartItem);
-  };
 
   if (loading) {
     return (
@@ -165,7 +159,24 @@ const Product = () => {
                   onQuantityChange={handleQuantityChange} 
                 />
                 <button
-                  onClick={handleAddToCart}
+                    onClick={() => {
+                      dispatch(
+                          addToCart({
+                            productId: product.id,
+                            slug: product.slug,
+                            qty: quantity,
+                            price: parseInt(product.price),
+                            colorId: selectedColor,
+                            sizeId: selectedSize,
+                            maxQty: parseInt(product.qty),
+                            image: product.thumbnail,
+                            coupon_id: null,
+                          })
+                      );
+                      setSelectedColor(null);
+                      setSelectedSize(null);
+                      setQuantity(1);
+                    }}
                   disabled={product.status !== 1 || product.qty === 0}
                   className="flex-1 bg-indigo-600 text-white py-3 px-8 rounded-xl font-semibold hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
                 >
