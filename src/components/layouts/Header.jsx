@@ -1,6 +1,8 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { ShoppingCart } from 'lucide-react';
+import { Link } from "react-router-dom";
+
 
 
 const Header = () => {
@@ -33,10 +35,10 @@ const Header = () => {
                     </ul>
                     <div className="grow"></div>
                     <div className="hidden items-center justify-center gap-6 md:flex">
-                        <button className="rounded-md bg-linear-to-br from-green-600 to-emerald-400 px-3 py-1.5 font-dm text-sm font-medium text-white shadow-md shadow-green-400/50 transition-transform duration-200 ease-in-out hover:scale-[1.03] hover:cursor-pointer inline-flex items-center gap-2">
+                        <Link className="rounded-md bg-linear-to-br from-green-600 to-emerald-400 px-3 py-1.5 font-dm text-sm font-medium text-white shadow-md shadow-green-400/50 transition-transform duration-200 ease-in-out hover:scale-[1.03] hover:cursor-pointer inline-flex items-center gap-2" to={'/cart'}>
                             <ShoppingCart className="w-5 h-5" />
                             Cart{" "} <span className={`px-2 py-0.5 rounded-md ${ cartItems.length > 0 ? "bg-red-600 text-white" : "bg-transparent" }`} > {cartItems.length} </span>
-                        </button>
+                        </Link>
                         <a href="#" className="font-dm text-sm font-medium text-slate-700">
                             Sign in
                         </a>
