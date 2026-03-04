@@ -11,10 +11,10 @@ const Cart = () => {
                 </h1>
                 <div className="flex items-start mt-8 gap-6">
                     <div className="bg-white p-4 w-[800px] rounded-xl">
-                        <table className="w-full bg-[#0A2025] rounded-xl">
+                        <table className="w-full bg-white  rounded-2xl shadow-2xl">
                             <thead>
                             <tr
-                                className="text-center border-b border-gray-400 w-full text-[#7f7f7f] text-sm font-medium uppercase leading-[14px] tracking-wide"
+                                className="text-center border-b border-gray-400 w-full text-[#7f7f7f] text-sm font-medium uppercase mt-2 tracking-wide"
                             >
                                 <th className="text-left px-2 py-2">Product</th>
                                 <th className="px-2 py-2">price</th>
@@ -282,7 +282,7 @@ const Cart = () => {
                             </tfoot>
                         </table>
                     </div>
-                    <div className="w-[424px] bg-[#0A2025] rounded-lg p-6">
+                    <div className="w-[424px] bg-white shadow-2xl rounded-lg p-6">
                         <h2 className="text-[#191919] mb-2 text-xl font-medium leading-[30px]">
                             Cart Total
                         </h2>
