@@ -162,6 +162,7 @@ const Product = () => {
                     onClick={() => {
                       dispatch(
                           addToCart({
+                            title: product.name,
                             productId: product.id,
                             slug: product.slug,
                             qty: quantity,
