@@ -24,18 +24,52 @@ export const cartSlice = createSlice({
             );
 
             if (productItem) {
-                toast.info('Product already added to cart');
+                toast.info('Product already added to cart',{className: "bg-white text-black",
+                    progressClassName: "bg-emerald-500" });
             }else{
                 state.cartItems = [item, ...state.cartItems];
-                toast.info('Product added to cart');
+                toast.info('Product added to cart',{progressClassName: "bg-emerald-500"});
             }
         }
+        ,
+        increaseQuantity: (state, action) => {
+            const { productId, colorId, sizeId } = action.payload;
+            const existingItem = state.cartItems.find(
+                (item) =>
+                    item.productId === productId &&
+                    item.colorId === colorId &&
+                    item.sizeId === sizeId
+            );
+            if (existingItem && existingItem.qty < existingItem.maxQty) {
+                existingItem.qty++;
+            } else if (existingItem && existingItem.qty >= existingItem.maxQty) {
+                toast.warn(`Maximum quantity reached for ${existingItem.title}`);
+            }
+        },
+        decreaseQuantity: (state, action) => {
+            const { productId, colorId, sizeId } = action.payload;
+            const existingItem = state.cartItems.find(
+                (item) =>
+                    item.productId === productId &&
+                    item.colorId === colorId &&
+                    item.sizeId === sizeId
+            );
+            if (existingItem && existingItem.qty > 1) {
+                existingItem.qty--;
+            } else if (existingItem && existingItem.qty === 1) {
+                state.cartItems = state.cartItems.filter(
+                    (item) =>
+                        !(item.productId === productId && item.colorId === colorId && item.sizeId === sizeId)
+                );
+                toast.info(`${existingItem.title} removed from cart`);
+            }
+        },
    }
 })
 
 
 const cartReducer = cartSlice.reducer
 
-export const {addToCart} = cartSlice.actions;
+export const {addToCart, increaseQuantity, decreaseQuantity} = cartSlice.actions;
 
 export default cartReducer;

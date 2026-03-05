@@ -1,6 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {Plus, Minus, BadgeX} from 'lucide-react';
+import { increaseQuantity, decreaseQuantity } from "../../redux/slices/cartSlice";
 
 const Cart = () => {
+    const cartItems = useSelector((state) => state.cart.cartItems);
+    const dispatch = useDispatch();
+    const [totalAmount, setTotalAmount] = useState(0);
+
+    useEffect(() => {
+        const calculateTotal = () => {
+            let total = 0;
+            cartItems.forEach((item) => {
+                total += item.price * item.qty;
+            });
+            setTotalAmount(total);
+        };
+        
+        calculateTotal();
+    }, [cartItems]);
+
+    const handleIncreaseQty = (item) => {
+        dispatch(increaseQuantity({
+            productId: item.productId,
+            colorId: item.colorId,
+            sizeId: item.sizeId
+        }));
+    };
+
+    const handleDecreaseQty = (item) => {
+        dispatch(decreaseQuantity({
+            productId: item.productId,
+            colorId: item.colorId,
+            sizeId: item.sizeId
+        }));
+    };
+
     return (
         <>
             <section className="w-full bg-white dark:white py-9 px-8">
@@ -10,7 +45,7 @@ const Cart = () => {
                     My Shopping Cart
                 </h1>
                 <div className="flex items-start mt-8 gap-6">
-                    <div className="bg-white p-4 w-[800px] rounded-xl">
+                    <div className="bg-white px-4 w-[800px] rounded-xl">
                         <table className="w-full bg-white  rounded-2xl shadow-2xl">
                             <thead>
                             <tr
@@ -24,258 +59,43 @@ const Cart = () => {
                             </tr>
                             </thead>
                             <tbody>
-                            <tr className="text-center">
-                                <td className="px-2 py-2 text-left align-top">
-                                    <img
-                                        src="https://iili.io/3FqLBsI.png"
-                                        alt="test"
-                                        className="w-[100px] mr-2 inline-block h-[100px]"
-                                    /><span>Green Capsicum</span>
-                                </td>
-                                <td className="px-2 py-2">$14.00</td>
-                                <td
-                                    className="p-2 mt-9 bg-white rounded-[170px] border border-[#a0a0a0] justify-around items-center flex"
-                                >
-                                    <svg
-                                        width="14"
-                                        height="15"
-                                        className="cursor-pointer"
-                                        viewBox="0 0 14 15"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            d="M2.33398 7.5H11.6673"
-                                            stroke="#666666"
-                                            strokeWidth="1.5"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        ></path></svg
-                                    ><span
-                                    className="w-10 text-center text-[#191919] text-base font-normal leading-normal"
-                                >5</span
-                                ><svg
-                                    className="cursor-pointer relative"
-                                    width="14"
-                                    height="15"
-                                    viewBox="0 0 14 15"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        d="M2.33398 7.49998H11.6673M7.00065 2.83331V12.1666V2.83331Z"
-                                        stroke="#1A1A1A"
-                                        strokeWidth="1.5"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    ></path>
-                                </svg>
-                                </td>
-                                <td className="px-2 py-2">$70.00</td>
-                                <td className="px-2 py-2">
-                                    <svg
-                                        width="24"
-                                        className="cursor-pointer"
-                                        height="25"
-                                        viewBox="0 0 24 25"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            d="M12 23.5C18.0748 23.5 23 18.5748 23 12.5C23 6.42525 18.0748 1.5 12 1.5C5.92525 1.5 1 6.42525 1 12.5C1 18.5748 5.92525 23.5 12 23.5Z"
-                                            stroke="#CCCCCC"
-                                            strokeMiterlimit="10"
-                                        ></path>
-                                        <path
-                                            d="M16 8.5L8 16.5"
-                                            stroke="#666666"
-                                            strokeWidth="1.5"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        ></path>
-                                        <path
-                                            d="M16 16.5L8 8.5"
-                                            stroke="#666666"
-                                            strokeWidth="1.5"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        ></path>
-                                    </svg>
-                                </td>
-                            </tr>
-                            <tr className="text-center">
-                                <td className="px-2 py-2 text-left align-top">
-                                    <img
-                                        src="https://iili.io/3FqLBsI.png"
-                                        alt="test"
-                                        className="w-[100px] mr-2 inline-block h-[100px]"
-                                    /><span>Green Capsicum</span>
-                                </td>
-                                <td className="px-2 py-2">$14.00</td>
-                                <td
-                                    className="p-2 mt-9 bg-white rounded-[170px] border border-[#a0a0a0] justify-around items-center flex"
-                                >
-                                    <svg
-                                        width="14"
-                                        height="15"
-                                        className="cursor-pointer"
-                                        viewBox="0 0 14 15"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            d="M2.33398 7.5H11.6673"
-                                            stroke="#666666"
-                                            strokeWidth="1.5"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        ></path></svg
-                                    ><span
-                                    className="w-10 text-center text-[#191919] text-base font-normal leading-normal"
-                                >5</span
-                                ><svg
-                                    className="cursor-pointer relative"
-                                    width="14"
-                                    height="15"
-                                    viewBox="0 0 14 15"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        d="M2.33398 7.49998H11.6673M7.00065 2.83331V12.1666V2.83331Z"
-                                        stroke="#1A1A1A"
-                                        strokeWidth="1.5"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    ></path>
-                                </svg>
-                                </td>
-                                <td className="px-2 py-2">$70.00</td>
-                                <td className="px-2 py-2">
-                                    <svg
-                                        width="24"
-                                        className="cursor-pointer"
-                                        height="25"
-                                        viewBox="0 0 24 25"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            d="M12 23.5C18.0748 23.5 23 18.5748 23 12.5C23 6.42525 18.0748 1.5 12 1.5C5.92525 1.5 1 6.42525 1 12.5C1 18.5748 5.92525 23.5 12 23.5Z"
-                                            stroke="#CCCCCC"
-                                            strokeMiterlimit="10"
-                                        ></path>
-                                        <path
-                                            d="M16 8.5L8 16.5"
-                                            stroke="#666666"
-                                            strokeWidth="1.5"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        ></path>
-                                        <path
-                                            d="M16 16.5L8 8.5"
-                                            stroke="#666666"
-                                            strokeWidth="1.5"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        ></path>
-                                    </svg>
-                                </td>
-                            </tr>
-                            <tr className="text-center">
-                                <td className="px-2 py-2 text-left align-top">
-                                    <img
-                                        src="https://iili.io/3FqLBsI.png"
-                                        alt="test"
-                                        className="w-[100px] mr-2 inline-block h-[100px]"
-                                    /><span>Green Capsicum</span>
-                                </td>
-                                <td className="px-2 py-2">$14.00</td>
-                                <td
-                                    className="p-2 mt-9 bg-white rounded-[170px] border border-[#a0a0a0] justify-around items-center flex"
-                                >
-                                    <svg
-                                        width="14"
-                                        height="15"
-                                        className="cursor-pointer"
-                                        viewBox="0 0 14 15"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            d="M2.33398 7.5H11.6673"
-                                            stroke="#666666"
-                                            strokeWidth="1.5"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        ></path></svg
-                                    ><span
-                                    className="w-10 text-center text-[#191919] text-base font-normal leading-normal"
-                                >5</span
-                                ><svg
-                                    className="cursor-pointer relative"
-                                    width="14"
-                                    height="15"
-                                    viewBox="0 0 14 15"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        d="M2.33398 7.49998H11.6673M7.00065 2.83331V12.1666V2.83331Z"
-                                        stroke="#1A1A1A"
-                                        strokeWidth="1.5"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    ></path>
-                                </svg>
-                                </td>
-                                <td className="px-2 py-2">$70.00</td>
-                                <td className="px-2 py-2">
-                                    <svg
-                                        width="24"
-                                        className="cursor-pointer"
-                                        height="25"
-                                        viewBox="0 0 24 25"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            d="M12 23.5C18.0748 23.5 23 18.5748 23 12.5C23 6.42525 18.0748 1.5 12 1.5C5.92525 1.5 1 6.42525 1 12.5C1 18.5748 5.92525 23.5 12 23.5Z"
-                                            stroke="#CCCCCC"
-                                            strokeMiterlimit="10"
-                                        ></path>
-                                        <path
-                                            d="M16 8.5L8 16.5"
-                                            stroke="#666666"
-                                            strokeWidth="1.5"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        ></path>
-                                        <path
-                                            d="M16 16.5L8 8.5"
-                                            stroke="#666666"
-                                            strokeWidth="1.5"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        ></path>
-                                    </svg>
-                                </td>
-                            </tr>
+                            {cartItems?.map((item) => {
+                                const itemSubtotal = item.price * item.qty;
+                                return (
+                                    <tr className="text-center" key={item.productId}>
+                                        <td className="px-2 py-2 text-left align-top">
+                                            <img
+                                                src={item.image}
+                                                alt={item.title}
+                                                className="w-[100px] mr-2 inline-block h-[100px]"
+                                            /><span>{item.title}</span>
+                                        </td>
+                                        <td className="px-2 py-2">${item.price.toFixed(2)}</td>
+                                        <td
+                                            className="p-2 mt-9 bg-white rounded-[170px] border border-[#a0a0a0] justify-around items-center flex"
+                                        >
+                                            <Minus className="cursor-pointer" onClick={() => handleDecreaseQty(item)} /><span
+                                            className="w-10 text-center text-[#191919] text-base font-normal leading-normal"
+                                        >
+                                                { item.qty}
+                                            </span
+                                        > <Plus className="cursor-pointer" onClick={() => handleIncreaseQty(item)}/>
+                                        </td>
+                                        <td className="p-1">${itemSubtotal.toFixed(2)}</td>
+                                        <td className="px-2 py-2">
+                                            <BadgeX />
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                             </tbody>
                             <tfoot>
                             <tr className="border-t border-gray-400">
-                                <td className="px-2 py-2" colspan="3">
+                                <td className="px-2 py-2" colSpan="3">
                                     <button
                                         className="px-8 cursor-pointer py-3.5 bg-[#f2f2f2] rounded-[43px] text-[#4c4c4c] text-sm font-semibold classNameName leading-[16px]"
                                     >
                                         Return to shop
-                                    </button>
-                                </td>
-                                <td className="px-2 py-2" colspan="2">
-                                    <button
-                                        className="px-8 py-3.5 cursor-pointer bg-[#f2f2f2] rounded-[43px] text-[#4c4c4c] text-sm font-semibold classNameName leading-[16px]"
-                                    >
-                                        Update Cart
                                     </button>
                                 </td>
                             </tr>
@@ -287,29 +107,32 @@ const Cart = () => {
                             Cart Total
                         </h2>
                         <div className="w-[376px] py-3 justify-between items-center flex">
-        <span className="text-[#4c4c4c] text-base font-normal leading-normal"
-        >Total:</span
-        ><span className="text-[#191919] text-base font-semibold leading-tight"
-                        >$84.00</span
-                        >
+                            <span className="text-[#4c4c4c] text-base font-normal leading-normal">
+                                Total:
+                            </span>
+                            <span className="text-[#191919] text-base font-semibold leading-tight">
+                                ${totalAmount.toFixed(2)}
+                            </span>
                         </div>
                         <div
                             className="w-[376px] py-3 shadow-[0px_1px_0px_0px_rgba(229,229,229,1.00)] justify-between items-center flex"
                         >
-        <span className="text-[#4c4c4c] text-sm font-normal leading-[21px]"
-        >Shipping:</span
-        ><span className="text-[#191919] text-sm font-medium leading-[21px]"
-                        >Free</span
-                        >
+                            <span className="text-[#4c4c4c] text-sm font-normal leading-[21px]">
+                                Shipping:
+                            </span>
+                            <span className="text-[#191919] text-sm font-medium leading-[21px]">
+                                Free
+                            </span>
                         </div>
                         <div
                             className="w-[376px] py-3 shadow-[0px_1px_0px_0px_rgba(229,229,229,1.00)] justify-between items-center flex"
                         >
-        <span className="text-[#4c4c4c] text-sm font-normal leading-[21px]"
-        >Subtotal:</span
-        ><span className="text-[#191919] text-sm font-medium leading-[21px]"
-                        >$84.00</span
-                        >
+                            <span className="text-[#4c4c4c] text-sm font-normal leading-[21px]">
+                                Subtotal:
+                            </span>
+                            <span className="text-[#191919] text-sm font-medium leading-[21px]">
+                                ${totalAmount.toFixed(2)}
+                            </span>
                         </div>
                         <button
                             className="w-[376px] text-white mt-5 px-10 py-4 bg-[#00b206] rounded-[44px] gap-4 text-base font-semibold leading-tight"
@@ -340,7 +163,7 @@ const Cart = () => {
                 </div>
             </section>
         </>
-    )
-}
+    );
+};
 
 export default Cart;
