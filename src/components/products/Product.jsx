@@ -54,7 +54,7 @@ const Product = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-indigo-600" />
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-emerald-400" />
       </div>
     );
   }
@@ -64,7 +64,7 @@ const Product = () => {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Product Not Found</h2>
-          <Link to="/products" className="text-indigo-600 hover:text-indigo-700 font-medium">
+          <Link to="/products" className="text-emerald-400 hover:text-emerald-700 font-medium">
             Back to Products
           </Link>
         </div>
@@ -99,7 +99,7 @@ const Product = () => {
                 <div>
                   <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
                   <div className="flex items-center gap-4">
-                    <span className="text-3xl font-bold text-indigo-600">
+                    <span className="text-3xl font-bold text-emerald-400">
                       ${parseFloat(product.price).toFixed(2)}
                     </span>
                     {product.qty > 0 ? (
@@ -165,11 +165,11 @@ const Product = () => {
                             productId: product.id,
                             slug: product.slug,
                             qty: quantity,
-                            price: parseInt(product.price),
+                            price: parseFloat(product.price),
                             colorId: selectedColor,
                             sizeId: selectedSize,
                             maxQty: parseInt(product.qty),
-                            image: product.thumbnail,
+                            image: product?.first_image ?? "default.png",
                             coupon_id: null,
                           })
                       );
@@ -177,8 +177,8 @@ const Product = () => {
                       setSelectedSize(null);
                       setQuantity(1);
                     }}
-                  disabled={product.status !== 1 || product.qty === 0}
-                  className="flex-1 bg-indigo-600 text-white py-3 px-8 rounded-xl font-semibold hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                  disabled={product.status !== 1 || product.qty === 0 || !selectedColor || !selectedSize}
+                  className="flex-1 bg-emerald-400 text-white py-3 px-8 rounded-xl font-semibold hover:bg-emerald-600 hover:cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
                 >
                   <ShoppingCart className="w-5 h-5" />
                   Add to Cart
@@ -187,15 +187,15 @@ const Product = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-gray-200">
                 <div className="flex items-center gap-3 text-gray-600">
-                  <Truck className="w-5 h-5 text-indigo-600" />
+                  <Truck className="w-5 h-5 text-emerald-400" />
                   {/*<span className="text-sm">Free Shipping</span>*/}
                 </div>
                 <div className="flex items-center gap-3 text-gray-600">
-                  <Shield className="w-5 h-5 text-indigo-600" />
+                  <Shield className="w-5 h-5 text-emerald-400" />
                   <span className="text-sm">2 Year Warranty</span>
                 </div>
                 <div className="flex items-center gap-3 text-gray-600">
-                  <RotateCcw className="w-5 h-5 text-indigo-600" />
+                  <RotateCcw className="w-5 h-5 text-emerald-400" />
                   {/*<span className="text-sm">30 Day Returns</span>*/}
                 </div>
               </div>

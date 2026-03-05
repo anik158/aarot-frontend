@@ -11,12 +11,12 @@ const ProductTabs = ({ product, activeTab, onTabChange }) => {
             key={tab}
             onClick={() => onTabChange(tab)}
             className={`px-8 py-4 font-medium text-sm capitalize transition-colors relative ${
-              activeTab === tab ? 'text-indigo-600' : 'text-gray-500 hover:text-gray-700'
+              activeTab === tab ? 'text-emerald-600' : 'text-gray-500 hover:text-gray-700'
             }`}
           >
             {tab}
             {activeTab === tab && (
-              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600" />
+              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-600" />
             )}
           </button>
         ))}
@@ -52,8 +52,8 @@ const ProductTabs = ({ product, activeTab, onTabChange }) => {
                 {product.reviews.map((review, idx) => (
                   <div key={idx} className="border-b border-gray-200 pb-4 last:border-0">
                     <div className="flex items-center gap-2 mb-2">
-                      <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
-                        <span className="font-semibold text-indigo-600">
+                      <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                        <span className="font-semibold text-emerald-600">
                           {review.user?.name?.[0] || 'U'}
                         </span>
                       </div>
@@ -88,15 +88,15 @@ const ProductTabs = ({ product, activeTab, onTabChange }) => {
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Shipping Information</h3>
             <ul className="space-y-3 text-gray-600">
               <li className="flex items-start gap-3">
-                <Truck className="w-5 h-5 text-indigo-600 mt-0.5" />
+                <Truck className="w-5 h-5 text-emerald-600 mt-0.5" />
                 <span>Free standard shipping on all orders over $50</span>
               </li>
               <li className="flex items-start gap-3">
-                <RotateCcw className="w-5 h-5 text-indigo-600 mt-0.5" />
+                <RotateCcw className="w-5 h-5 text-emerald-600 mt-0.5" />
                 <span>30-day hassle-free return policy</span>
               </li>
               <li className="flex items-start gap-3">
-                <Shield className="w-5 h-5 text-indigo-600 mt-0.5" />
+                <Shield className="w-5 h-5 text-emerald-600 mt-0.5" />
                 <span>All products come with 2-year warranty</span>
               </li>
             </ul>

@@ -11,9 +11,9 @@ const SizeSelector = ({ sizes, selectedSize, onSizeSelect }) => {
           <button
             key={size.id}
             onClick={() => onSizeSelect(size.id)}
-            className={`w-12 h-12 rounded-lg border-2 transition-all font-medium ${
+            className={`w-12 h-12 rounded-lg border-2 transition-all hover:cursor-pointer font-medium ${
               selectedSize === size.id
-                ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
+                ? 'border-emerald-600 bg-emerald-50 text-emerald-700'
                 : 'border-gray-200 hover:border-gray-300 text-gray-700'
             }`}
           >

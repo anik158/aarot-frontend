@@ -11,9 +11,9 @@ const ColorSelector = ({ colors, selectedColor, onColorSelect }) => {
           <button
             key={color.id}
             onClick={() => onColorSelect(color.id)}
-            className={`px-4 py-2 rounded-lg border-2 transition-all ${
+            className={`px-4 py-2 rounded-lg hover:cursor-pointer border-2 transition-all ${
               selectedColor === color.id
-                ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
+                ? 'border-emerald-400 bg-emerald-50 text-emerald-700'
                 : 'border-gray-200 hover:border-gray-300 text-gray-700'
             }`}
           >
