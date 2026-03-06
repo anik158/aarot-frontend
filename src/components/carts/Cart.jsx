@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {Plus, Minus, BadgeX} from 'lucide-react';
-import { increaseQuantity, decreaseQuantity } from "../../redux/slices/cartSlice";
+import { increaseQuantity, decreaseQuantity, removeFromCart } from "../../redux/slices/cartSlice";
 
 const Cart = () => {
     const cartItems = useSelector((state) => state.cart.cartItems);
+    console.log('cart items', cartItems)
     const dispatch = useDispatch();
     const [totalAmount, setTotalAmount] = useState(0);
 
@@ -35,6 +36,14 @@ const Cart = () => {
             sizeId: item.sizeId
         }));
     };
+
+    const removeItem = (item) => {
+        dispatch(removeFromCart({
+            productId: item.productId,
+            colorId: item.colorId,
+            sizeId: item.sizeId
+        }));
+    }
 
     return (
         <>
@@ -82,8 +91,8 @@ const Cart = () => {
                                         > <Plus className="cursor-pointer" onClick={() => handleIncreaseQty(item)}/>
                                         </td>
                                         <td className="p-1">${itemSubtotal.toFixed(2)}</td>
-                                        <td className="px-2 py-2">
-                                            <BadgeX />
+                                        <td className="px-2 py-2 hover:cursor-pointer">
+                                            <BadgeX onClick={( () => removeItem(item))} />
                                         </td>
                                     </tr>
                                 );

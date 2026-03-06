@@ -10,7 +10,7 @@ const ProductTabs = ({ product, activeTab, onTabChange }) => {
           <button
             key={tab}
             onClick={() => onTabChange(tab)}
-            className={`px-8 py-4 font-medium text-sm capitalize transition-colors relative ${
+            className={`px-8 py-4 font-medium text-sm hover:cursor-pointer capitalize transition-colors relative ${
               activeTab === tab ? 'text-emerald-600' : 'text-gray-500 hover:text-gray-700'
             }`}
           >

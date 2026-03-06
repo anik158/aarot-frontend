@@ -30,8 +30,18 @@ export const cartSlice = createSlice({
                 state.cartItems = [item, ...state.cartItems];
                 toast.info('Product added to cart',{progressClassName: "bg-emerald-500"});
             }
-        }
-        ,
+        },
+       removeFromCart: (state, action) => {
+            const {productId, colorId, sizeId} = action.payload;
+            state.cartItems = state.cartItems.filter((item) => {
+                return !(
+                    item.productId === productId &&
+                    item.colorId === colorId &&
+                    item.sizeId === sizeId)
+           })
+
+           toast.warn('Product removed from cart');
+       },
         increaseQuantity: (state, action) => {
             const { productId, colorId, sizeId } = action.payload;
             const existingItem = state.cartItems.find(
@@ -70,6 +80,6 @@ export const cartSlice = createSlice({
 
 const cartReducer = cartSlice.reducer
 
-export const {addToCart, increaseQuantity, decreaseQuantity} = cartSlice.actions;
+export const {addToCart, removeFromCart, increaseQuantity, decreaseQuantity} = cartSlice.actions;
 
 export default cartReducer;
