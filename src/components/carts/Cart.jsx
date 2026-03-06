@@ -61,6 +61,8 @@ const Cart = () => {
                                 className="text-center border-b border-gray-400 w-full text-[#7f7f7f] text-sm font-medium uppercase mt-2 tracking-wide"
                             >
                                 <th className="text-left px-2 py-2">Product</th>
+                                <th className="px-2 py-2">Color</th>
+                                <th className="px-2 py-2">Size</th>
                                 <th className="px-2 py-2">price</th>
                                 <th className="px-2 py-2">Quantity</th>
                                 <th className="px-2 py-2">Subtotal</th>
@@ -79,6 +81,8 @@ const Cart = () => {
                                                 className="w-[100px] mr-2 inline-block h-[100px]"
                                             /><span>{item.title}</span>
                                         </td>
+                                        <td className="px-2 py-2">{item.colorName}</td>
+                                        <td className="px-2 py-2">{item.sizeName}</td>
                                         <td className="px-2 py-2">${item.price.toFixed(2)}</td>
                                         <td
                                             className="p-2 mt-9 bg-white rounded-[170px] border border-[#a0a0a0] justify-around items-center flex"

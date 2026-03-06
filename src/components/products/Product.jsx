@@ -160,6 +160,9 @@ const Product = () => {
                 />
                 <button
                     onClick={() => {
+                      const selectedColorObject = product.colors?.find(color => color.id === selectedColor);
+                      const selectedSizeObject = product.sizes?.find(size => size.id === selectedSize);
+
                       dispatch(
                           addToCart({
                             title: product.name,
@@ -168,7 +171,9 @@ const Product = () => {
                             qty: quantity,
                             price: parseFloat(product.price),
                             colorId: selectedColor,
+                            colorName: selectedColorObject?.name || null,
                             sizeId: selectedSize,
+                            sizeName: selectedSizeObject?.name || null,
                             maxQty: parseInt(product.qty),
                             image: product?.first_image ?? "default.png",
                             coupon_id: null,
