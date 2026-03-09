@@ -42,12 +42,12 @@ const Header = () => {
                         <a href="#" className="font-dm text-sm font-medium text-slate-700">
                             Sign in
                         </a>
-                        <a
-                            href="#"
+                        <Link
+                            to={'/sign-up'}
                             className="rounded-md bg-linear-to-br from-green-600 to-emerald-400 px-3 py-1.5 font-dm text-sm font-medium text-white shadow-md shadow-green-400/50 transition-transform duration-200 ease-in-out hover:scale-[1.03]"
                         >
                             Sign up for free
-                        </a>
+                        </Link>
                     </div>
                     <div className="relative flex items-center justify-center md:hidden">
                         <button type="button">

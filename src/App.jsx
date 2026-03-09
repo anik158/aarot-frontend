@@ -7,6 +7,7 @@ import {Provider} from "react-redux";
 import {PersistGate} from "redux-persist/integration/react";
 import {persistStorage,store} from "./redux/store/index.js";
 import Cart from "./components/carts/Cart.jsx";
+import SignUpForm from "./components/sign-up/SignUpForm.jsx";
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
                           <Route path="/" element={<Home />} />
                           <Route path="/cart" element={<Cart/>}></Route>
                           <Route path="/products/:productId" element={<Product/>} />
+                          <Route path="/sign-up" element={<SignUpForm/>} />
                       </Routes>
                   </main>
               </BrowserRouter>
