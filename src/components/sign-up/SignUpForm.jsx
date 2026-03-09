@@ -1,78 +1,219 @@
-import React,{useState, useEffect} from "react";
+import React, { useState } from "react";
+import { User, Mail, KeyRound, SendHorizontal } from "lucide-react";
 
 const SignUpForm = () => {
-    const {form, setForm} = {
-        'name': useState(''),
-        'email': useState(''),
-        'password': useState(''),
-        'password_confirmation': useState('')
-    }
+    const [form, setForm] = useState({
+        name: "",
+        email: "",
+        password: "",
+        password_confirmation: "",
+    });
 
-    const {loading, setLoading} = useState(false);
+    const [errors, setErrors] = useState({});
+    const [touched, setTouched] = useState({});
+    const [loading, setLoading] = useState(false);
+
+    const validateField = (name, value) => {
+        let error = "";
+
+        if (name === "name") {
+            if (!value.trim()) {
+                error = "Name is required";
+            } else if (!/^[A-Za-z\s]+$/.test(value)) {
+                error = "Name must contain only letters";
+            }
+        }
+
+        if (name === "email") {
+            if (!value.trim()) {
+                error = "Email is required";
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                error = "Invalid email format";
+            }
+        }
+
+        if (name === "password") {
+            if (!value) {
+                error = "Password is required";
+            } else if (value.length < 8 || value.length > 16) {
+                error = "Password must be 8–16 characters";
+            }
+        }
+
+        if (name === "password_confirmation") {
+            if (!value) {
+                error = "Please confirm password";
+            } else if (value !== form.password) {
+                error = "Passwords do not match";
+            }
+        }
+
+        return error;
+    };
 
     const handleChange = (e) => {
-        setForm({...form, [e.target.name]: e.target.value})
-    }
+        const { name, value } = e.target;
+        setForm((prev) => ({ ...prev, [name]: value }));
 
-    const submitSignUpForm = () => {
+        const error = validateField(name, value);
+        setErrors((prev) => ({ ...prev, [name]: error }));
+
+        if (!touched[name]) {
+            setTouched((prev) => ({ ...prev, [name]: true }));
+        }
+    };
+
+    const handleBlur = (e) => {
+        const { name, value } = e.target;
+        const error = validateField(name, value);
+        setErrors((prev) => ({ ...prev, [name]: error }));
+        setTouched((prev) => ({ ...prev, [name]: true }));
+    };
+
+    const submitSignUpForm = (e) => {
+        e.preventDefault();
+
+        const newErrors = {};
+        Object.keys(form).forEach((field) => {
+            const error = validateField(field, form[field]);
+            if (error) newErrors[field] = error;
+        });
+
+        setErrors(newErrors);
+        setTouched(
+            Object.keys(form).reduce((acc, field) => ({ ...acc, [field]: true }), {})
+        );
+
+        if (Object.keys(newErrors).length > 0) return;
+
         setLoading(true);
-    }
+
+        // Example:
+        // await fetch('/api/signup', { method: 'POST', body: JSON.stringify(form) })
+        // setLoading(false);
+    };
+
+    const getInputClasses = (fieldName) => {
+        const hasError = touched[fieldName] && errors[fieldName];
+        return `
+      h-full px-2 w-full outline-none bg-transparent
+      ${hasError ? "text-red-700" : ""}
+    `;
+    };
+
+    const getContainerClasses = (fieldName) => {
+        const hasError = touched[fieldName] && errors[fieldName];
+        return `
+      flex items-center mt-2 mb-1 h-10 pl-3 border rounded-full 
+      transition-all overflow-hidden
+      ${hasError
+            ? "border-red-400 focus-within:ring-2 focus-within:ring-red-400"
+            : "border-slate-300 focus-within:ring-2 focus-within:ring-emerald-400"}
+    `;
+    };
 
     return (
-        <>
-            <form className="flex flex-col items-center text-sm from-green-600 to-emerald-400">
-                <p className="text-xs bg-emerald-200 text-emerald-600 font-medium px-3 py-1 rounded-full">Contact Us</p>
-                <h1 className="text-4xl font-bold py-4 text-center">Let’s Get In Touch.</h1>
-                <p className="max-md:text-sm text-emerald-500 pb-10 text-center">
-                    Or just reach out manually to us at <a href="#"
-                                                           className="text-emerald-600 hover:underline">hello@prebuiltui.com</a>
-                </p>
+        <form onSubmit={submitSignUpForm} className="flex flex-col items-center text-sm">
+            <p className="text-xs bg-emerald-200 text-emerald-600 font-medium px-3 py-1 rounded-full">
+                Sign Up
+            </p>
+            <h1 className="text-4xl font-bold py-4 text-center">Create an Account.</h1>
+            <p className="max-md:text-sm text-emerald-500 pb-10 text-center">
+                Already have an account?{" "}
+                <a href="#" className="text-emerald-600 underline">
+                    Sign in here
+                </a>
+            </p>
 
-                <div className="max-w-96 w-full px-4">
-                    <label htmlFor="name" className="font-medium">Full Name</label>
-                    <div
-                        className="flex items-center mt-2 mb-4 h-10 pl-3 border border-slate-300 rounded-full focus-within:ring-2 focus-within:ring-emerald-400 transition-all overflow-hidden">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M18.311 16.406a9.64 9.64 0 0 0-4.748-4.158 5.938 5.938 0 1 0-7.125 0 9.64 9.64 0 0 0-4.749 4.158.937.937 0 1 0 1.623.938c1.416-2.447 3.916-3.906 6.688-3.906 2.773 0 5.273 1.46 6.689 3.906a.938.938 0 0 0 1.622-.938M5.938 7.5a4.063 4.063 0 1 1 8.125 0 4.063 4.063 0 0 1-8.125 0"
-                                fill="#475569"/>
-                        </svg>
-                        <input type="text" className="h-full px-2 w-full outline-none bg-transparent"
-                               placeholder="Enter your full name" required/>
-                    </div>
+            <div className="max-w-96 w-full px-4">
 
-                    <label htmlFor="email-address" className="font-medium mt-4">Email Address</label>
-                    <div
-                        className="flex items-center mt-2 mb-4 h-10 pl-3 border border-slate-300 rounded-full focus-within:ring-2 focus-within:ring-emerald-400 transition-all overflow-hidden">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M17.5 3.438h-15a.937.937 0 0 0-.937.937V15a1.563 1.563 0 0 0 1.562 1.563h13.75A1.563 1.563 0 0 0 18.438 15V4.375a.94.94 0 0 0-.938-.937m-2.41 1.874L10 9.979 4.91 5.313zM3.438 14.688v-8.18l5.928 5.434a.937.937 0 0 0 1.268 0l5.929-5.435v8.182z"
-                                fill="#475569"/>
-                        </svg>
-                        <input type="email" className="h-full px-2 w-full outline-none bg-transparent"
-                               placeholder="Enter your email address" required/>
-                    </div>
-
-                    <label htmlFor="message" className="font-medium mt-4">Message</label>
-                    <textarea rows="4"
-                              className="w-full mt-2 p-2 bg-transparent border border-slate-300 rounded-lg resize-none outline-none focus:ring-2 focus-within:ring-emerald-400 transition-all"
-                              placeholder="Enter your message" required></textarea>
-
-                    <button type="submit"
-                            className="flex items-center justify-center gap-1 mt-5 bg-emerald-500 hover:bg-emerald-600 text-white py-2.5 w-full rounded-full transition">
-                        Submit Form
-                        <svg className="mt-0.5" width="21" height="20" viewBox="0 0 21 20" fill="none"
-                             xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="m18.038 10.663-5.625 5.625a.94.94 0 0 1-1.328-1.328l4.024-4.023H3.625a.938.938 0 0 1 0-1.875h11.484l-4.022-4.025a.94.94 0 0 1 1.328-1.328l5.625 5.625a.935.935 0 0 1-.002 1.33"
-                                fill="#fff"/>
-                        </svg>
-                    </button>
+                {/* Name */}
+                <label htmlFor="name" className="font-medium">Full Name</label>
+                <div className={getContainerClasses("name")}>
+                    <User className="text-slate-400 w-5 h-5" />
+                    <input
+                        type="text"
+                        name="name"
+                        value={form.name}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={getInputClasses("name")}
+                        placeholder="Enter your full name"
+                    />
                 </div>
-            </form>
-        </>
-    )
+                {touched.name && errors.name && (
+                    <p className="text-red-600 text-xs mt-1 pl-4">{errors.name}</p>
+                )}
 
-}
+                {/* Email */}
+                <label htmlFor="email" className="font-medium mt-4">Email Address</label>
+                <div className={getContainerClasses("email")}>
+                    <Mail className="text-slate-400 w-5 h-5" />
+                    <input
+                        type="email"
+                        name="email"
+                        value={form.email}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={getInputClasses("email")}
+                        placeholder="Enter your email address"
+                    />
+                </div>
+                {touched.email && errors.email && (
+                    <p className="text-red-600 text-xs mt-1 pl-4">{errors.email}</p>
+                )}
+
+                {/* Password */}
+                <label htmlFor="password" className="font-medium mt-4">Password</label>
+                <div className={getContainerClasses("password")}>
+                    <KeyRound className="text-slate-400 w-5 h-5" />
+                    <input
+                        type="password"
+                        name="password"
+                        value={form.password}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={getInputClasses("password")}
+                        placeholder="Enter your password"
+                    />
+                </div>
+                {touched.password && errors.password && (
+                    <p className="text-red-600 text-xs mt-1 pl-4">{errors.password}</p>
+                )}
+
+                {/* Confirm Password */}
+                <label htmlFor="password_confirmation" className="font-medium mt-4">
+                    Confirm Password
+                </label>
+                <div className={getContainerClasses("password_confirmation")}>
+                    <KeyRound className="text-slate-400 w-5 h-5" />
+                    <input
+                        type="password"
+                        name="password_confirmation"
+                        value={form.password_confirmation}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={getInputClasses("password_confirmation")}
+                        placeholder="Confirm your password"
+                    />
+                </div>
+                {touched.password_confirmation && errors.password_confirmation && (
+                    <p className="text-red-600 text-xs mt-1 pl-4">
+                        {errors.password_confirmation}
+                    </p>
+                )}
+
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="flex items-center hover:cursor-pointer justify-center gap-1 mt-6 bg-emerald-500 hover:bg-emerald-600 text-white py-2.5 w-full rounded-full transition disabled:opacity-50"
+                >
+                    {loading ? "Submitting..." : "Create Account"}
+                    <SendHorizontal className="w-4 h-4" />
+                </button>
+            </div>
+        </form>
+    );
+};
 
 export default SignUpForm;
