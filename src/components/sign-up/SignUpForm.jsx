@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import { User, Mail, KeyRound, SendHorizontal } from "lucide-react";
+import { axiosRequest } from '../../helpers/config.js';
+import { validateField, getInputClasses, getContainerClasses } from './signUpForm.utils.js';
+import { toast } from "react-toastify";
+
 
 const SignUpForm = () => {
     const [form, setForm] = useState({
@@ -13,69 +17,13 @@ const SignUpForm = () => {
     const [touched, setTouched] = useState({});
     const [loading, setLoading] = useState(false);
 
-    const validateField = (name, value) => {
-        let error = "";
-
-        if (name === "name") {
-            if (!value.trim()) {
-                error = "Name is required";
-            } else if (!/^[A-Za-z\s]+$/.test(value)) {
-                error = "Name must contain only letters";
-            }
-        }
-
-        if (name === "email") {
-            if (!value.trim()) {
-                error = "Email is required";
-            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-                error = "Invalid email format";
-            }
-        }
-
-        if (name === "password") {
-            if (!value) {
-                error = "Password is required";
-            } else if (value.length < 8 || value.length > 16) {
-                error = "Password must be 8–16 characters";
-            }
-        }
-
-        if (name === "password_confirmation") {
-            if (!value) {
-                error = "Please confirm password";
-            } else if (value !== form.password) {
-                error = "Passwords do not match";
-            }
-        }
-
-        return error;
-    };
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setForm((prev) => ({ ...prev, [name]: value }));
-
-        const error = validateField(name, value);
-        setErrors((prev) => ({ ...prev, [name]: error }));
-
-        if (!touched[name]) {
-            setTouched((prev) => ({ ...prev, [name]: true }));
-        }
-    };
-
-    const handleBlur = (e) => {
-        const { name, value } = e.target;
-        const error = validateField(name, value);
-        setErrors((prev) => ({ ...prev, [name]: error }));
-        setTouched((prev) => ({ ...prev, [name]: true }));
-    };
-
-    const submitSignUpForm = (e) => {
+    const submitSignUpForm = async (e) => {
         e.preventDefault();
 
+        // Run frontend validation first
         const newErrors = {};
         Object.keys(form).forEach((field) => {
-            const error = validateField(field, form[field]);
+            const error = validateField(field, form[field], form); // Pass 'form' for password confirmation
             if (error) newErrors[field] = error;
         });
 
@@ -88,28 +36,59 @@ const SignUpForm = () => {
 
         setLoading(true);
 
-        // Example:
-        // await fetch('/api/signup', { method: 'POST', body: JSON.stringify(form) })
-        // setLoading(false);
+        try {
+            const response = await axiosRequest.post("users", form);
+
+            if (response.data.success) {
+                toast.success(response.data.message || "User created successfully!");
+                setLoading(false);
+                setForm({ name: "", email: "", password: "", password_confirmation: "" });
+                setErrors({});
+                setTouched({});
+            }
+        } catch (error) {
+            if (error.response && error.response.data) {
+                const { message, errors } = error.response.data;
+
+                toast.error(message);
+
+                if (errors) {
+                    setErrors(errors);
+                    setTouched(
+                        Object.keys(errors).reduce((acc, field) => ({ ...acc, [field]: true }), {})
+                    );
+
+                    Object.keys(errors).forEach((field) => {
+                        errors[field].forEach((errMsg) => {
+                            toast.error(`${field}: ${errMsg}`);
+                        });
+                    });
+                }
+            } else {
+                toast.error("Unexpected error occurred. Please try again.");
+            }
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const getInputClasses = (fieldName) => {
-        const hasError = touched[fieldName] && errors[fieldName];
-        return `
-      h-full px-2 w-full outline-none bg-transparent
-      ${hasError ? "text-red-700" : ""}
-    `;
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setForm((prev) => ({ ...prev, [name]: value }));
+
+        const error = validateField(name, value, form);
+        setErrors((prev) => ({ ...prev, [name]: error }));
+
+        if (!touched[name]) {
+            setTouched((prev) => ({ ...prev, [name]: true }));
+        }
     };
 
-    const getContainerClasses = (fieldName) => {
-        const hasError = touched[fieldName] && errors[fieldName];
-        return `
-      flex items-center mt-2 mb-1 h-10 pl-3 border rounded-full 
-      transition-all overflow-hidden
-      ${hasError
-            ? "border-red-400 focus-within:ring-2 focus-within:ring-red-400"
-            : "border-slate-300 focus-within:ring-2 focus-within:ring-emerald-400"}
-    `;
+    const handleBlur = (e) => {
+        const { name, value } = e.target;
+        const error = validateField(name, value, form);
+        setErrors((prev) => ({ ...prev, [name]: error }));
+        setTouched((prev) => ({ ...prev, [name]: true }));
     };
 
     return (
@@ -129,15 +108,15 @@ const SignUpForm = () => {
 
                 {/* Name */}
                 <label htmlFor="name" className="font-medium">Full Name</label>
-                <div className={getContainerClasses("name")}>
+                <div className={getContainerClasses("name", touched, errors)}>
                     <User className="text-slate-400 w-5 h-5" />
                     <input
                         type="text"
                         name="name"
                         value={form.name}
                         onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={getInputClasses("name")}
+                        onBlur={handleBlur} // Pass touched and errors to getInputClasses
+                        className={getInputClasses("name", touched, errors)}
                         placeholder="Enter your full name"
                     />
                 </div>
@@ -147,15 +126,15 @@ const SignUpForm = () => {
 
                 {/* Email */}
                 <label htmlFor="email" className="font-medium mt-4">Email Address</label>
-                <div className={getContainerClasses("email")}>
+                <div className={getContainerClasses("email", touched, errors)}>
                     <Mail className="text-slate-400 w-5 h-5" />
                     <input
                         type="email"
                         name="email"
                         value={form.email}
                         onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={getInputClasses("email")}
+                        onBlur={handleBlur} // Pass touched and errors to getInputClasses
+                        className={getInputClasses("email", touched, errors)}
                         placeholder="Enter your email address"
                     />
                 </div>
@@ -165,15 +144,15 @@ const SignUpForm = () => {
 
                 {/* Password */}
                 <label htmlFor="password" className="font-medium mt-4">Password</label>
-                <div className={getContainerClasses("password")}>
+                <div className={getContainerClasses("password", touched, errors)}>
                     <KeyRound className="text-slate-400 w-5 h-5" />
                     <input
                         type="password"
                         name="password"
                         value={form.password}
                         onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={getInputClasses("password")}
+                        onBlur={handleBlur} // Pass touched and errors to getInputClasses
+                        className={getInputClasses("password", touched, errors)}
                         placeholder="Enter your password"
                     />
                 </div>
@@ -185,15 +164,15 @@ const SignUpForm = () => {
                 <label htmlFor="password_confirmation" className="font-medium mt-4">
                     Confirm Password
                 </label>
-                <div className={getContainerClasses("password_confirmation")}>
+                <div className={getContainerClasses("password_confirmation", touched, errors)}>
                     <KeyRound className="text-slate-400 w-5 h-5" />
                     <input
                         type="password"
                         name="password_confirmation"
                         value={form.password_confirmation}
                         onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={getInputClasses("password_confirmation")}
+                        onBlur={handleBlur} // Pass touched and errors to getInputClasses
+                        className={getInputClasses("password_confirmation", touched, errors)}
                         placeholder="Confirm your password"
                     />
                 </div>

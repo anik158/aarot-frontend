@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import axios from "axios";
 import ProductList from './components/products/ProductList';
 import { axiosRequest } from './helpers/config';
 
