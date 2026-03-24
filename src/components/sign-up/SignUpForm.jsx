@@ -40,7 +40,7 @@ const SignUpForm = () => {
             const response = await axiosRequest.post("users", form);
 
             if (response.data.success) {
-                toast.success(response.data.message || "User created successfully!");
+                toast.success(response.data.message || "Logged in successfully!");
                 setLoading(false);
                 setForm({ name: "", email: "", password: "", password_confirmation: "" });
                 setErrors({});
@@ -115,7 +115,7 @@ const SignUpForm = () => {
                         name="name"
                         value={form.name}
                         onChange={handleChange}
-                        onBlur={handleBlur} // Pass touched and errors to getInputClasses
+                        onBlur={handleBlur}
                         className={getInputClasses("name", touched, errors)}
                         placeholder="Enter your full name"
                     />
@@ -133,7 +133,7 @@ const SignUpForm = () => {
                         name="email"
                         value={form.email}
                         onChange={handleChange}
-                        onBlur={handleBlur} // Pass touched and errors to getInputClasses
+                        onBlur={handleBlur}
                         className={getInputClasses("email", touched, errors)}
                         placeholder="Enter your email address"
                     />
@@ -151,7 +151,7 @@ const SignUpForm = () => {
                         name="password"
                         value={form.password}
                         onChange={handleChange}
-                        onBlur={handleBlur} // Pass touched and errors to getInputClasses
+                        onBlur={handleBlur}
                         className={getInputClasses("password", touched, errors)}
                         placeholder="Enter your password"
                     />
@@ -171,7 +171,7 @@ const SignUpForm = () => {
                         name="password_confirmation"
                         value={form.password_confirmation}
                         onChange={handleChange}
-                        onBlur={handleBlur} // Pass touched and errors to getInputClasses
+                        onBlur={handleBlur}
                         className={getInputClasses("password_confirmation", touched, errors)}
                         placeholder="Confirm your password"
                     />

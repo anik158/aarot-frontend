@@ -1,12 +1,33 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { ShoppingCart } from 'lucide-react';
 import { Link } from "react-router-dom";
+import {axiosRequest} from "../../helpers/config.js";
+import {toast} from "react-toastify";
+import {setLoggedInOut, setToken} from "../../redux/slices/userSlice.js";
 
 
 
 const Header = () => {
     const cartItems = useSelector((state) => state.cart.cartItems);
+    const token = useSelector((state) => state.user.token);
+    const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+
+    const dispatch = useDispatch();
+
+    const handleLogout = async () => {
+        try {
+            await axiosRequest.post("/logout", {}, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            dispatch(setLoggedInOut(false));
+            dispatch(setToken(""));
+            toast.success("Logged out successfully!");
+        } catch (error) {
+            toast.error("Logout failed. Please try again.");
+            console.log(error)
+        }
+    };
 
     return (
         <>
@@ -42,9 +63,21 @@ const Header = () => {
                             <ShoppingCart className="w-5 h-5" />
                             Cart{" "} <span className={`px-2 py-0.5 rounded-md ${ cartItems.length > 0 ? "bg-red-600 text-white" : "bg-transparent" }`} > {cartItems.length} </span>
                         </Link>
-                        <a href="#" className="font-dm text-sm font-medium text-slate-700">
-                            Sign in
-                        </a>
+                        {isLoggedIn ? (
+                            <button
+                                className="font-dm text-sm hover:cursor-pointer font-medium text-slate-700"
+                                onClick={handleLogout}
+                            >
+                                Sign out
+                            </button>
+                        ) : (
+                            <Link
+                                className="font-dm text-sm font-medium text-slate-700"
+                                to="/sign-in"
+                            >
+                                Sign in
+                            </Link>
+                        )}
                         <Link
                             to={'/sign-up'}
                             className="rounded-md bg-linear-to-br from-green-600 to-emerald-400 px-3 py-1.5 font-dm text-sm font-medium text-white shadow-md shadow-green-400/50 transition-transform duration-200 ease-in-out hover:scale-[1.03]"
