@@ -20,10 +20,10 @@ const SignUpForm = () => {
     const submitSignUpForm = async (e) => {
         e.preventDefault();
 
-        // Run frontend validation first
+
         const newErrors = {};
         Object.keys(form).forEach((field) => {
-            const error = validateField(field, form[field], form); // Pass 'form' for password confirmation
+            const error = validateField(field, form[field], form);
             if (error) newErrors[field] = error;
         });
 

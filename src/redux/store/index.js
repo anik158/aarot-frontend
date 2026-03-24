@@ -11,10 +11,12 @@ import {
     PURGE,
     REGISTER,
 } from 'redux-persist'
+import userReducer from "../slices/userSlice.js";
 
 
 const rootReducer = combineReducers({
     cart: cartReducer,
+    user: userReducer
 })
 
 
