@@ -127,7 +127,6 @@ const SignInForm = () => {
 
                 <div className="max-w-96 w-full px-4">
 
-                    {/* Email */}
                     <label htmlFor="email" className="font-medium mt-4">Email Address</label>
                     <div className={getContainerClasses("email", touched, errors)}>
                         <Mail className="text-slate-400 w-5 h-5" />
@@ -145,7 +144,6 @@ const SignInForm = () => {
                         <p className="text-red-600 text-xs mt-1 pl-4">{errors.email}</p>
                     )}
 
-                    {/* Password */}
                     <label htmlFor="password" className="font-medium mt-4">Password</label>
                     <div className={getContainerClasses("password", touched, errors)}>
                         <KeyRound className="text-slate-400 w-5 h-5" />
