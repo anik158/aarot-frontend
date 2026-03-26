@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
 import {toast} from "react-toastify";
+import {axiosRequest} from "../../helpers/config.js";
 
 const Checkout = () => {
     const cartItems = useSelector((state) => state.cart.cartItems);
@@ -14,6 +15,7 @@ const Checkout = () => {
         address: '',
         city: '',
     });
+
 
     const [errors, setErrors] = useState({});
     const [touched, setTouched] = useState({});
@@ -77,21 +79,42 @@ const Checkout = () => {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handlePlaceOrder = () => {
+    const handlePlaceOrder = async () => {
         if (cartItems.length === 0) {
-            toast.warning("Your cart is empty!")
+            toast.error("Your cart is empty!");
             return;
         }
 
         const isValid = validateForm();
         if (!isValid) return;
 
-        console.log("=== Order Ready to Send ===");
-        console.log("Shipping:", formData);
-        console.log("Cart Items:", cartItems);
-        console.log("Total:", subtotal);
+        const payload = {
+            name: formData.name,
+            phone: formData.phone,
+            address: formData.address,
+            city: formData.city,
+            cart_items: cartItems.map(item => ({
+                productId: item.productId,
+                colorId: item.colorId,
+                sizeId: item.sizeId,
+                qty: item.qty,
+                price: item.price,
+            }))
+        };
 
-        toast.info("Form is valid! In the next step, we will send this data to Laravel.")
+        try {
+            const response = await axiosRequest.post('/checkout', payload);
+
+            if (response.data.success) {
+                alert(`Order placed successfully! Order Number: ${response.data.data.order_number}`);
+
+                // TODO: Later we will clear the cart and redirect to order confirmation
+                // For now, just show success
+            }
+        } catch (error) {
+            console.error(error);
+            alert(error.response?.data?.message || "Something went wrong. Please try again.");
+        }
     };
 
     const subtotal = cartItems.reduce((total, item) => total + item.price * item.qty, 0);
@@ -118,13 +141,11 @@ const Checkout = () => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-                    {/* Shipping Form */}
                     <div className="lg:col-span-7 space-y-8">
                         <div className="bg-white rounded-2xl shadow-sm p-6">
                             <h2 className="text-xl font-semibold mb-6">Shipping Address</h2>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {/* Name */}
                                 <div className="md:col-span-2">
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
                                     <input
@@ -143,7 +164,6 @@ const Checkout = () => {
                                     )}
                                 </div>
 
-                                {/* Phone */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number *</label>
                                     <input
@@ -241,7 +261,8 @@ const Checkout = () => {
 
                             <button
                                 onClick={handlePlaceOrder}
-                                className="w-full mt-8 bg-emerald-500 hover:bg-emerald-600 text-white py-4 rounded-2xl font-semibold text-lg transition"
+                                className="w-full hover:cursor-pointer
+                                 mt-8 bg-emerald-500 hover:bg-emerald-600 text-white py-4 rounded-2xl font-semibold text-lg transition"
                             >
                                 Place Order
                             </button>
