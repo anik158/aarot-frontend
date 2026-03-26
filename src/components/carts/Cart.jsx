@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {Plus, Minus, BadgeX} from 'lucide-react';
 import { increaseQuantity, decreaseQuantity, removeFromCart } from "../../redux/slices/cartSlice";
+import { Link } from 'react-router-dom';
+
 
 const Cart = () => {
     const cartItems = useSelector((state) => state.cart.cartItems);
@@ -147,11 +149,11 @@ const Cart = () => {
                                 ${totalAmount.toFixed(2)}
                             </span>
                         </div>
-                        <button
-                            className="w-[376px] text-white mt-5 px-10 py-4 bg-[#00b206] rounded-[44px] gap-4 text-base font-semibold leading-tight"
+                        <Link to={'/checkout'}
+                            className="block text-white text-center mt-5 px-10 py-4 bg-[#00b206] rounded-[44px] gap-4 text-base font-semibold leading-tight"
                         >
                             Proceed to checkout
-                        </button>
+                        </Link>
                     </div>
                 </div>
                 <div

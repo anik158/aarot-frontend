@@ -5,6 +5,7 @@ import {axiosRequest} from "../../helpers/config.js";
 import {toast} from "react-toastify";
 import {useDispatch} from "react-redux";
 import {setCurrentUser, setToken} from "../../redux/slices/userSlice.js";
+import {useLocation, useNavigate} from "react-router-dom";
 
 
 const SignInForm = () => {
@@ -18,6 +19,9 @@ const SignInForm = () => {
     const [loading, setLoading] = useState(false);
 
     const dispatch  = useDispatch();
+
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const submitSignInForm =  async (e) =>{
         e.preventDefault();
@@ -37,23 +41,29 @@ const SignInForm = () => {
 
         setLoading(true);
 
+        const handleSuccess = (response) => {
+            const { user, access_token } = response.data.data;
+
+            dispatch(setCurrentUser(user));
+            dispatch(setToken(access_token));
+
+            const from = location.state?.from?.pathname || '/';
+
+            navigate(from, { replace: true });
+            toast.success(response.data.message || "Logged in successfully!");
+            setLoading(false);
+            setForm({ email: "", password: "" });
+            setErrors({});
+            setTouched({});
+
+        }
+
 
         try {
             const response  = await axiosRequest.post("login", form)
 
             if(response.data.success) {
-                const { user, access_token } = response.data.data;
-
-
-                dispatch(setCurrentUser(user));
-                dispatch(setToken(access_token));
-
-                toast.success(response.data.message || "Logged in successfully!");
-                setLoading(false);
-                setForm({ email: "", password: "" });
-                setErrors({});
-                setTouched({});
-
+                handleSuccess(response);
             }
 
         }catch (error) {

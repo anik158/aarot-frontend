@@ -9,6 +9,7 @@ import {persistStorage,store} from "./redux/store/index.js";
 import Cart from "./components/carts/Cart.jsx";
 import SignUpForm from "./components/sign-up/SignUpForm.jsx";
 import SignInForm from "./components/sign-in/SignInForm.jsx";
+import Checkout from "./components/checkout/Checkout.jsx";
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
                           <Route path="/products/:productId" element={<Product/>} />
                           <Route path="/sign-up" element={<SignUpForm/>} />
                           <Route path="/sign-in" element={<SignInForm/>} />
+                          <Route path={'/checkout'} element={<Checkout/>} />
                       </Routes>
                   </main>
               </BrowserRouter>
