@@ -74,12 +74,16 @@ export const cartSlice = createSlice({
                 toast.info(`${existingItem.title} removed from cart`);
             }
         },
+        clearCart: (state) => {
+           state.cartItems = [];
+           toast.success("Cart cleared after order placement");
+        },
    }
 })
 
 
 const cartReducer = cartSlice.reducer
 
-export const {addToCart, removeFromCart, increaseQuantity, decreaseQuantity} = cartSlice.actions;
+export const {addToCart, removeFromCart, increaseQuantity, decreaseQuantity, clearCart} = cartSlice.actions;
 
 export default cartReducer;

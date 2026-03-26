@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Navigate, useLocation } from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
+import {Navigate, useLocation, useNavigate} from 'react-router-dom';
 import {toast} from "react-toastify";
 import {axiosRequest} from "../../helpers/config.js";
+import {clearCart} from "../../redux/slices/cartSlice.js";
 
 const Checkout = () => {
     const cartItems = useSelector((state) => state.cart.cartItems);
     const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+    const dispatch = useDispatch();
     const location = useLocation();
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         name: '',
@@ -106,14 +109,19 @@ const Checkout = () => {
             const response = await axiosRequest.post('/checkout', payload);
 
             if (response.data.success) {
-                alert(`Order placed successfully! Order Number: ${response.data.data.order_number}`);
+                const { order_number } = response.data.data;
 
-                // TODO: Later we will clear the cart and redirect to order confirmation
-                // For now, just show success
+                dispatch(clearCart());
+
+                toast.success(`Order placed successfully!\n\nOrder Number: ${order_number}\n\nThank you for shopping with us!`)
+
+                navigate('/');
             }
         } catch (error) {
-            console.error(error);
-            alert(error.response?.data?.message || "Something went wrong. Please try again.");
+            console.error("Checkout error:", error);
+            const errorMessage = error.response?.data?.message ||
+                "Something went wrong while placing your order. Please try again.";
+            toast.error(errorMessage);
         }
     };
 
