@@ -149,7 +149,7 @@ const Cart = () => {
                             </span>
                         </div>
                         <Link to={'/checkout'}
-                            className="block text-white text-center mt-5 px-10 py-4 bg-[#00b206] rounded-[44px] gap-4 text-base font-semibold leading-tight"
+                            className="block text-white text-center mt-5 px-10 py-4 bg-emerald-500 rounded-[44px] gap-4 text-base font-semibold leading-tight"
                         >
                             Proceed to checkout
                         </Link>

@@ -11,6 +11,7 @@ const Checkout = () => {
     const dispatch = useDispatch();
     const location = useLocation();
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
 
     const [formData, setFormData] = useState({
         name: '',
@@ -115,13 +116,15 @@ const Checkout = () => {
 
                 toast.success(`Order placed successfully!\n\nOrder Number: ${order_number}\n\nThank you for shopping with us!`)
 
-                navigate('/');
+                navigate(`/order-confirmation/${order_number}`);
             }
         } catch (error) {
             console.error("Checkout error:", error);
             const errorMessage = error.response?.data?.message ||
                 "Something went wrong while placing your order. Please try again.";
             toast.error(errorMessage);
+        }finally {
+            setIsLoading(false);
         }
     };
 
@@ -143,7 +146,7 @@ const Checkout = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 py-8">
+        <div className="min-h-screen bg-gray-50 p-3">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h1 className="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
 
@@ -269,10 +272,18 @@ const Checkout = () => {
 
                             <button
                                 onClick={handlePlaceOrder}
-                                className="w-full hover:cursor-pointer
-                                 mt-8 bg-emerald-500 hover:bg-emerald-600 text-white py-4 rounded-2xl font-semibold text-lg transition"
+                                disabled={isLoading}
+                                className="w-full mt-8 bg-emerald-500 hover:cursor-pointer hover:bg-emerald-600 disabled:bg-gray-400
+               text-white py-4 rounded-2xl font-semibold text-lg transition flex items-center justify-center gap-2"
                             >
-                                Place Order
+                                {isLoading ? (
+                                    <>
+                                        <div className="w-5 h-5 border-2 border-white border-t-transparent animate-spin rounded-full"></div>
+                                        Processing Order...
+                                    </>
+                                ) : (
+                                    'Place Order'
+                                )}
                             </button>
                         </div>
                     </div>
