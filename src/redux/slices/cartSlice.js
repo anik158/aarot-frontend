@@ -28,7 +28,6 @@ export const cartSlice = createSlice({
                     progressClassName: "bg-emerald-500" });
             }else{
                 state.cartItems = [item, ...state.cartItems];
-                toast.info('Product added to cart',{progressClassName: "bg-emerald-500"});
             }
         },
        removeFromCart: (state, action) => {

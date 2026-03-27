@@ -1,5 +1,6 @@
 import axios from "axios";
 import { store } from "../redux/store/index.js";
+import { getGuestToken } from "./guestToken.js";
 
 export const axiosRequest = axios.create({
     baseURL: "http://e-commerce-laravel.test/api/",
@@ -9,11 +10,16 @@ export const axiosRequest = axios.create({
     },
 });
 
-// Attach token if available
 axiosRequest.interceptors.request.use((config) => {
-    const token = store.getState().user.token; // assuming you store it in Redux
+    const token = store.getState().user.token;
+
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
+    } else {
+        config.headers['X-Guest-Token'] = getGuestToken();
     }
+
     return config;
 });
+
+export default axiosRequest;

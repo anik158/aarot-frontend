@@ -9,6 +9,7 @@ import QuantitySelector from './QuantitySelector';
 import ProductTabs from './ProductTabs';
 import {useDispatch} from 'react-redux';
 import {addToCart} from "../../redux/slices/cartSlice.js";
+import {toast} from "react-toastify";
 
 const Product = () => {
   const { productId } = useParams();
@@ -19,6 +20,7 @@ const Product = () => {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
   const dispatch = useDispatch();
+  const [isAdding, setIsAdding] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -42,6 +44,39 @@ const Product = () => {
 
     fetchProduct();
   }, [productId]);
+
+  const handleAddToCart = async () => {
+    if (!selectedColor || !selectedSize) {
+      toast.error("Please select color and size");
+      return;
+    }
+
+    const payload = {
+      product_id: product.id,
+      color_id: selectedColor,
+      size_id: selectedSize,
+      qty: quantity,
+    };
+
+    try {
+      setIsAdding(true);
+
+      const response = await axiosRequest.post('/cart/add', payload);
+
+      if (response.data.success) {
+        toast.success("Item added to cart successfully!");
+
+        setSelectedColor(null);
+        setSelectedSize(null);
+        setQuantity(1);
+      }
+    } catch (error) {
+      const message = error.response?.data?.message || "Failed to add item to cart";
+      toast.error(message);
+    } finally {
+      setIsAdding(false);
+    }
+  };
 
   const handleQuantityChange = (delta) => {
     const newQty = quantity + delta;
@@ -159,35 +194,12 @@ const Product = () => {
                   onQuantityChange={handleQuantityChange} 
                 />
                 <button
-                    onClick={() => {
-                      const selectedColorObject = product.colors?.find(color => color.id === selectedColor);
-                      const selectedSizeObject = product.sizes?.find(size => size.id === selectedSize);
-
-                      dispatch(
-                          addToCart({
-                            title: product.name,
-                            productId: product.id,
-                            slug: product.slug,
-                            qty: quantity,
-                            price: parseFloat(product.price),
-                            colorId: selectedColor,
-                            colorName: selectedColorObject?.name || null,
-                            sizeId: selectedSize,
-                            sizeName: selectedSizeObject?.name || null,
-                            maxQty: parseInt(product.qty),
-                            image: product?.first_image ?? "default.png",
-                            coupon_id: null,
-                          })
-                      );
-                      setSelectedColor(null);
-                      setSelectedSize(null);
-                      setQuantity(1);
-                    }}
+                    onClick={handleAddToCart}
                   disabled={product.status !== 1 || product.qty === 0 || !selectedColor || !selectedSize}
-                  className="flex-1 bg-emerald-400 text-white py-3 px-8 rounded-xl font-semibold hover:bg-emerald-600 hover:cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                  className="flex-1 bg-emerald-400 hover:bg-emerald-600 text-white py-3 px-8 rounded-xl font-semibold  hover:cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
                 >
                   <ShoppingCart className="w-5 h-5" />
-                  Add to Cart
+                  {isAdding ? "Adding..." : "Add to Cart"}
                 </button>
               </div>
 

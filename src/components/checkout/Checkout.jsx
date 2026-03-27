@@ -92,6 +92,8 @@ const Checkout = () => {
         const isValid = validateForm();
         if (!isValid) return;
 
+        setIsLoading(true);
+
         const payload = {
             name: formData.name,
             phone: formData.phone,
@@ -273,7 +275,7 @@ const Checkout = () => {
                             <button
                                 onClick={handlePlaceOrder}
                                 disabled={isLoading}
-                                className="w-full mt-8 bg-emerald-500 hover:cursor-pointer hover:bg-emerald-600 disabled:bg-gray-400
+                                className="w-full mt-8 bg-emerald-400 hover:bg-emerald-600 hover:cursor-pointer  disabled:bg-gray-400
                text-white py-4 rounded-2xl font-semibold text-lg transition flex items-center justify-center gap-2"
                             >
                                 {isLoading ? (
