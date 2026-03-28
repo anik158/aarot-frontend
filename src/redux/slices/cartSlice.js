@@ -77,12 +77,15 @@ export const cartSlice = createSlice({
            state.cartItems = [];
            toast.success("Cart cleared after order placement");
         },
+        setCartItems: (state, action) => {
+            state.cartItems = action.payload;
+        },
    }
 })
 
 
 const cartReducer = cartSlice.reducer
 
-export const {addToCart, removeFromCart, increaseQuantity, decreaseQuantity, clearCart} = cartSlice.actions;
+export const {addToCart, removeFromCart, increaseQuantity, decreaseQuantity, clearCart, setCartItems} = cartSlice.actions;
 
 export default cartReducer;

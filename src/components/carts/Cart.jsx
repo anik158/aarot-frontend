@@ -3,8 +3,11 @@ import { Link } from 'react-router-dom';
 import { Plus, Minus, BadgeX } from 'lucide-react';
 import { toast } from "react-toastify";
 import axiosRequest from "../../helpers/config.js";
+import { useDispatch } from "react-redux";
+import { setCartItems as updateCartItems } from "../../redux/slices/cartSlice.js";
 
 const Cart = () => {
+    const dispatch = useDispatch();
     const [cartItems, setCartItems] = useState([]);
     const [totalAmount, setTotalAmount] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
@@ -32,6 +35,7 @@ const Cart = () => {
                 }));
 
                 setCartItems(items);
+                dispatch(updateCartItems(items));
 
                 const total = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
                 setTotalAmount(total);

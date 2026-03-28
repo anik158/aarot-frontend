@@ -1,10 +1,11 @@
-import React from "react";
-import {useDispatch, useSelector} from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { ShoppingCart } from 'lucide-react';
 import { Link } from "react-router-dom";
 import {axiosRequest} from "../../helpers/config.js";
 import {toast} from "react-toastify";
 import {setLoggedInOut, setToken} from "../../redux/slices/userSlice.js";
+import {setCartItems} from "../../redux/slices/cartSlice.js";
 
 
 
@@ -14,6 +15,32 @@ const Header = () => {
     const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        const fetchCartCount = async () => {
+            try {
+                const response = await axiosRequest.get('/cart');
+                if (response.data.success) {
+                    let items = response.data.data || [];
+                    items = items.map((item, index) => ({
+                        productId: item.productId || item.product_id || `temp-${index}`,
+                        colorId: item.colorId || item.color_id || null,
+                        sizeId: item.sizeId || item.size_id || null,
+                        qty: parseInt(item.qty || item.quantity) || 1,
+                        price: parseFloat(item.price) || 0,
+                        title: item.title || "Unknown Product",
+                        image: item.image || null,
+                        colorName: item.colorName || item.color_name || "N/A",
+                        sizeName: item.sizeName || item.size_name || "N/A",
+                    }));
+                    dispatch(setCartItems(items));
+                }
+            } catch (error) {
+                console.error("Failed to load cart on load:", error);
+            }
+        };
+        fetchCartCount();
+    }, [dispatch, isLoggedIn]);
 
     const handleLogout = async () => {
         try {

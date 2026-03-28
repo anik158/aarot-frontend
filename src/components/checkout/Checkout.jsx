@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Navigate, useLocation, useNavigate} from 'react-router-dom';
 import {toast} from "react-toastify";
@@ -6,7 +6,8 @@ import {axiosRequest} from "../../helpers/config.js";
 import {clearCart} from "../../redux/slices/cartSlice.js";
 
 const Checkout = () => {
-    const cartItems = useSelector((state) => state.cart.cartItems);
+    const [cartItems, setCartItems] = useState([]);
+    const [fetchingCart, setFetchingCart] = useState(true);
     const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
     const dispatch = useDispatch();
     const location = useLocation();
@@ -20,6 +21,39 @@ const Checkout = () => {
         city: '',
     });
 
+    useEffect(() => {
+        const fetchCart = async () => {
+            try {
+                const response = await axiosRequest.get('/cart');
+                if (response.data.success) {
+                    let items = response.data.data || [];
+                    
+                    items = items.map((item, index) => ({
+                        productId: item.productId || item.product_id || `temp-${index}`,
+                        colorId: item.colorId || item.color_id || null,
+                        sizeId: item.sizeId || item.size_id || null,
+                        qty: parseInt(item.qty || item.quantity) || 1,
+                        price: parseFloat(item.price) || 0,
+                        title: item.title || "Unknown Product",
+                        image: item.image || null,
+                        colorName: item.colorName || item.color_name || "N/A",
+                        sizeName: item.sizeName || item.size_name || "N/A",
+                    }));
+                    setCartItems(items);
+                }
+            } catch (error) {
+                console.error("Failed to load cart for checkout", error);
+            } finally {
+                setFetchingCart(false);
+            }
+        };
+
+        if (isLoggedIn) {
+            fetchCart();
+        } else {
+            setFetchingCart(false);
+        }
+    }, [isLoggedIn]);
 
     const [errors, setErrors] = useState({});
     const [touched, setTouched] = useState({});
@@ -114,6 +148,12 @@ const Checkout = () => {
             if (response.data.success) {
                 const { order_number } = response.data.data;
 
+                try {
+                    await axiosRequest.delete('/cart/clear');
+                } catch (clearError) {
+                    console.error("Failed to clear cart:", clearError);
+                }
+
                 dispatch(clearCart());
 
                 toast.success(`Order placed successfully!\n\nOrder Number: ${order_number}\n\nThank you for shopping with us!`)
@@ -134,6 +174,17 @@ const Checkout = () => {
 
     if (!isLoggedIn) {
         return <Navigate to="/sign-in" state={{ from: location }} replace />;
+    }
+
+    if (fetchingCart) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="text-center">
+                    <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent animate-spin rounded-full mx-auto mb-4"></div>
+                    <h2 className="text-xl font-semibold">Loading checkout...</h2>
+                </div>
+            </div>
+        );
     }
 
     if (cartItems.length === 0) {

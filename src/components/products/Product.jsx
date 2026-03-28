@@ -65,6 +65,13 @@ const Product = () => {
 
       if (response.data.success) {
         toast.success("Item added to cart successfully!");
+        
+        dispatch(addToCart({
+            productId: product.id,
+            colorId: selectedColor,
+            sizeId: selectedSize,
+            qty: quantity,
+        }));
 
         setSelectedColor(null);
         setSelectedSize(null);
