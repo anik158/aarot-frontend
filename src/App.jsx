@@ -11,6 +11,8 @@ import SignUpForm from "./components/sign-up/SignUpForm.jsx";
 import SignInForm from "./components/sign-in/SignInForm.jsx";
 import Checkout from "./components/checkout/Checkout.jsx";
 import OrderConfirmation from "./pages/Orderconfirmation.jsx";
+import React from "react";
+import MyOrders from "./pages/MyOrders.jsx";
 
 function App() {
 
@@ -29,6 +31,7 @@ function App() {
                           <Route path="/sign-in" element={<SignInForm/>} />
                           <Route path={'/checkout'} element={<Checkout/>} />
                           <Route path="/order-confirmation/:orderNumber" element={<OrderConfirmation />} />
+                          <Route path="/my-orders" element={<MyOrders />} />
                       </Routes>
                   </main>
               </BrowserRouter>
