@@ -41,29 +41,48 @@ const SignInForm = () => {
 
         setLoading(true);
 
-        const handleSuccess = (response) => {
+        const handleSuccess = async (response) => {
             const { user, access_token } = response.data.data;
 
             dispatch(setCurrentUser(user));
             dispatch(setToken(access_token));
 
-            const from = location.state?.from?.pathname || '/';
+            try {
+                const guestToken = localStorage.getItem('guest_token');
 
+                if (guestToken) {
+                    await axiosRequest.post('/cart/merge', {}, {
+                        headers: {
+                            'X-Guest-Token': guestToken
+                        }
+                    });
+
+                    toast.success("Logged in successfully! Your cart has been merged.");
+
+                    localStorage.removeItem('guest_token');
+                } else {
+                    toast.success(response.data.message || "Logged in successfully!");
+                }
+            } catch (mergeError) {
+                console.error("Cart merge failed:", mergeError);
+                toast.success(response.data.message || "Logged in successfully!");
+            }
+
+            const from = location.state?.from?.pathname || '/';
             navigate(from, { replace: true });
-            toast.success(response.data.message || "Logged in successfully!");
+
             setLoading(false);
             setForm({ email: "", password: "" });
             setErrors({});
             setTouched({});
-
-        }
+        };
 
 
         try {
             const response  = await axiosRequest.post("login", form)
 
             if(response.data.success) {
-                handleSuccess(response);
+                await handleSuccess(response);
             }
 
         }catch (error) {
