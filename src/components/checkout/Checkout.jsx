@@ -13,6 +13,7 @@ const Checkout = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
+    const [paymentMethod, setPaymentMethod] = useState('cod');
 
     const [formData, setFormData] = useState({
         name: '',
@@ -133,6 +134,7 @@ const Checkout = () => {
             phone: formData.phone,
             address: formData.address,
             city: formData.city,
+            payment_method: paymentMethod,
             cart_items: cartItems.map(item => ({
                 productId: item.productId,
                 colorId: item.colorId,
@@ -156,9 +158,18 @@ const Checkout = () => {
 
                 dispatch(clearCart());
 
-                toast.success(`Order placed successfully!\n\nOrder Number: ${order_number}\n\nThank you for shopping with us!`)
+                if (paymentMethod === 'cod') {
+                    toast.success(`Order placed successfully! Order Number: ${order_number}`);
+                    navigate(`/order-confirmation/${order_number}`);
+                } else if (paymentMethod === 'stripe') {
+                    const stripeResponse = await axiosRequest.post('/payment/stripe/session', {
+                        order_number: order_number
+                    });
 
-                navigate(`/order-confirmation/${order_number}`);
+                    if (stripeResponse.data.success) {
+                        window.location.href = stripeResponse.data.data.url;
+                    }
+                }
             }
         } catch (error) {
             console.error("Checkout error:", error);
@@ -322,6 +333,53 @@ const Checkout = () => {
                                     <span>${subtotal.toFixed(2)}</span>
                                 </div>
                             </div>
+                            {/* Payment Method Selection */}
+                            <div className="bg-white rounded-2xl shadow-sm p-6 mt-8">
+                                <h2 className="text-xl font-semibold mb-6">Payment Method</h2>
+
+                                <div className="grid grid-cols-1 gap-4">
+                                    {/* Cash on Delivery */}
+                                    <label
+                                        className={`flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all ${
+                                            paymentMethod === 'cod' ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-gray-300'
+                                        }`}
+                                    >
+                                        <input
+                                            type="radio"
+                                            name="paymentMethod"
+                                            value="cod"
+                                            checked={paymentMethod === 'cod'}
+                                            onChange={(e) => setPaymentMethod(e.target.value)}
+                                            className="w-5 h-5 accent-emerald-500"
+                                        />
+                                        <div className="flex-1">
+                                            <p className="font-semibold">Cash on Delivery</p>
+                                            <p className="text-sm text-gray-500">Pay when you receive the product</p>
+                                        </div>
+                                    </label>
+
+                                    {/* Stripe */}
+                                    <label
+                                        className={`flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all ${
+                                            paymentMethod === 'stripe' ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-gray-300'
+                                        }`}
+                                    >
+                                        <input
+                                            type="radio"
+                                            name="paymentMethod"
+                                            value="stripe"
+                                            checked={paymentMethod === 'stripe'}
+                                            onChange={(e) => setPaymentMethod(e.target.value)}
+                                            className="w-5 h-5 accent-emerald-500"
+                                        />
+                                        <div className="flex-1">
+                                            <p className="font-semibold">Credit / Debit Card</p>
+                                            <p className="text-sm text-gray-500">Pay securely with Stripe</p>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
 
                             <button
                                 onClick={handlePlaceOrder}
