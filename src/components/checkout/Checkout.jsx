@@ -172,7 +172,7 @@ const Checkout = () => {
                 }
             }
         } catch (error) {
-            console.error("Checkout error:", error);
+            console.error("Checkout error: ", error);
             const errorMessage = error.response?.data?.message ||
                 "Something went wrong while placing your order. Please try again.";
             toast.error(errorMessage);
