@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ProductList from '../components/products/ProductList';
 import { axiosRequest } from '../helpers/config';
+import CustomSelect from '../components/common/CustomSelect';
 
 const AllProducts = () => {
     const [products, setProducts] = useState([]);
@@ -72,38 +73,29 @@ const AllProducts = () => {
 
             {/* Filters */}
             <div className="relative z-50 bg-white p-6 rounded-3xl shadow-sm mb-12 flex flex-wrap gap-4 items-center">
-                <select
+                <CustomSelect
+                    label="Categories"
                     value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="border border-gray-300 rounded-2xl px-5 py-3.5 focus:outline-none focus:border-emerald-500"
-                >
-                    <option value="">All Categories</option>
-                    {categories.map(cat => (
-                        <option key={cat.id} value={cat.id}>{cat.name}</option>
-                    ))}
-                </select>
+                    options={categories}
+                    onChange={setSelectedCategory}
+                    placeholder="All Categories"
+                />
 
-                <select
+                <CustomSelect
+                    label="Sizes"
                     value={selectedSize}
-                    onChange={(e) => setSelectedSize(e.target.value)}
-                    className="border border-gray-300 rounded-2xl px-5 py-3.5 focus:outline-none focus:border-emerald-500"
-                >
-                    <option value="">All Sizes</option>
-                    {sizes.map(size => (
-                        <option key={size.id} value={size.id}>{size.name}</option>
-                    ))}
-                </select>
+                    options={sizes}
+                    onChange={setSelectedSize}
+                    placeholder="All Sizes"
+                />
 
-                <select
+                <CustomSelect
+                    label="Colors"
                     value={selectedColor}
-                    onChange={(e) => setSelectedColor(e.target.value)}
-                    className="border border-gray-300 rounded-2xl px-5 py-3.5 focus:outline-none focus:border-emerald-500"
-                >
-                    <option value="">All Colors</option>
-                    {colors.map(color => (
-                        <option key={color.id} value={color.id}>{color.name}</option>
-                    ))}
-                </select>
+                    options={colors}
+                    onChange={setSelectedColor}
+                    placeholder="All Colors"
+                />
 
                 <input
                     type="text"

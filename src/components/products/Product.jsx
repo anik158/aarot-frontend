@@ -7,7 +7,7 @@ import ColorSelector from './ColorSelector';
 import SizeSelector from './SizeSelector';
 import QuantitySelector from './QuantitySelector';
 import ProductTabs from './ProductTabs';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {addToCart} from "../../redux/slices/cartSlice.js";
 import {toast} from "react-toastify";
 
@@ -21,6 +21,8 @@ const Product = () => {
   const [activeTab, setActiveTab] = useState('description');
   const dispatch = useDispatch();
   const [isAdding, setIsAdding] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const isLoggedIn = useSelector(state => state.user.isLoggedIn);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -42,8 +44,20 @@ const Product = () => {
       }
     };
 
+    const fetchFavoriteStatus = async () => {
+      if (isLoggedIn) {
+        try {
+          const response = await axiosRequest.get(`/favorites/${productId}/status`);
+          setIsFavorite(response.data.is_favorite);
+        } catch (error) {
+          console.error('Error fetching favorite status:', error);
+        }
+      }
+    };
+
     fetchProduct();
-  }, [productId]);
+    fetchFavoriteStatus();
+  }, [productId, isLoggedIn]);
 
   const handleAddToCart = async () => {
     if (!selectedColor || !selectedSize) {
@@ -89,6 +103,23 @@ const Product = () => {
     const newQty = quantity + delta;
     if (newQty >= 1 && newQty <= (product?.qty || 1)) {
       setQuantity(newQty);
+    }
+  };
+
+  const handleToggleFavorite = async () => {
+    if (!isLoggedIn) {
+      toast.info("Please login to add favorites");
+      return;
+    }
+
+    try {
+      const response = await axiosRequest.post(`/favorites/${product.id}`);
+      if (response.data.success) {
+        setIsFavorite(response.data.is_favorite);
+        toast.success(response.data.is_favorite ? "Added to favorites!" : "Removed from favorites");
+      }
+    } catch (error) {
+      toast.error("Failed to update favorites");
     }
   };
 
@@ -155,11 +186,11 @@ const Product = () => {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <button className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors">
-                    <Heart className="w-5 h-5 text-gray-600" />
-                  </button>
-                  <button className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors">
-                    <Share2 className="w-5 h-5 text-gray-600" />
+                  <button 
+                    onClick={handleToggleFavorite}
+                    className={`w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center transition-all duration-300 ${isFavorite ? 'bg-red-50 border-red-200' : 'hover:bg-gray-50'}`}
+                  >
+                    <Heart className={`w-5 h-5 transition-colors duration-300 ${isFavorite ? 'text-red-500 fill-red-500' : 'text-gray-600'}`} />
                   </button>
                 </div>
               </div>
