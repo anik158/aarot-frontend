@@ -178,19 +178,19 @@ const MyAccount = () => {
             <nav className="space-y-3 relative z-10">
               <button 
                 onClick={() => setActiveTab('profile')}
-                className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all duration-300 font-bold group ${activeTab === 'profile' ? 'bg-emerald-500 text-white shadow-xl shadow-emerald-500/30 -translate-y-0.5' : 'text-gray-500 hover:bg-white/60 hover:text-gray-900'}`}
+                className={`w-full flex items-center gap-4 px-6 py-4 hover:cursor-pointer rounded-2xl transition-all duration-300 font-bold group ${activeTab === 'profile' ? 'bg-emerald-500 text-white shadow-xl shadow-emerald-500/30 -translate-y-0.5' : 'text-gray-500 hover:bg-white/60 hover:text-gray-900'}`}
               >
                 <User size={22} className={activeTab === 'profile' ? 'text-white' : 'text-gray-400 group-hover:text-emerald-500 transition-colors'} /> Profile Info
               </button>
               <button 
                 onClick={() => setActiveTab('orders')}
-                className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all duration-300 font-bold group ${activeTab === 'orders' ? 'bg-emerald-500 text-white shadow-xl shadow-emerald-500/30 -translate-y-0.5' : 'text-gray-500 hover:bg-white/60 hover:text-gray-900'}`}
+                className={`w-full flex items-center gap-4 px-6 py-4 hover:cursor-pointer rounded-2xl transition-all duration-300 font-bold group ${activeTab === 'orders' ? 'bg-emerald-500 text-white shadow-xl shadow-emerald-500/30 -translate-y-0.5' : 'text-gray-500 hover:bg-white/60 hover:text-gray-900'}`}
               >
                 <ShoppingBag size={22} className={activeTab === 'orders' ? 'text-white' : 'text-gray-400 group-hover:text-emerald-500 transition-colors'} /> My Orders
               </button>
               <button 
                 onClick={() => setActiveTab('reviews')}
-                className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all duration-300 font-bold group ${activeTab === 'reviews' ? 'bg-emerald-500 text-white shadow-xl shadow-emerald-500/30 -translate-y-0.5' : 'text-gray-500 hover:bg-white/60 hover:text-gray-900'}`}
+                className={`w-full flex items-center gap-4 px-6 py-4  hover:cursor-pointer rounded-2xl transition-all duration-300 font-bold group ${activeTab === 'reviews' ? 'bg-emerald-500 text-white shadow-xl shadow-emerald-500/30 -translate-y-0.5' : 'text-gray-500 hover:bg-white/60 hover:text-gray-900'}`}
               >
                 <Star size={22} className={activeTab === 'reviews' ? 'text-white' : 'text-gray-400 group-hover:text-emerald-500 transition-colors'} /> My Reviews
               </button>
@@ -330,7 +330,7 @@ const MyAccount = () => {
                 <div className="pt-6 border-t border-white/40 flex justify-end">
                   <button 
                     disabled={loading}
-                    className="flex items-center gap-3 px-10 py-5 bg-emerald-500 hover:bg-emerald-600 text-white font-black rounded-2xl transition-all duration-300 shadow-2xl shadow-emerald-500/40 hover:scale-[1.03] active:scale-[0.97] disabled:opacity-50 tracking-tight"
+                    className="flex items-center gap-3 px-10 py-5 hover:cursor-pointer bg-emerald-500 hover:bg-emerald-600 text-white font-black rounded-2xl transition-all duration-300 shadow-2xl shadow-emerald-500/40 hover:scale-[1.03] active:scale-[0.97] disabled:opacity-50 tracking-tight"
                   >
                     <Save size={22} /> {loading ? 'Processing...' : 'Save Changes'}
                   </button>
@@ -340,8 +340,8 @@ const MyAccount = () => {
           )}
 
           {activeTab === 'orders' && (
-            <div className="bg-white/70 backdrop-blur-xl border border-white/60 rounded-3xl p-8 shadow-xl">
-              <h3 className="text-2xl font-bold text-gray-900 mb-8 font-dm">My Orders</h3>
+            <div className="bg-white/30 backdrop-blur-3xl border border-white/50 rounded-[2.5rem] p-10 shadow-2xl shadow-gray-200/50">
+              <h3 className="text-3xl font-black text-gray-900 mb-10 font-dm tracking-tight">My Orders</h3>
               
               {loading ? (
                 <div className="py-20 flex justify-center"><div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent animate-spin rounded-full"></div></div>
@@ -389,15 +389,15 @@ const MyAccount = () => {
                 <div className="text-center py-20 bg-gray-50/50 rounded-3xl border-2 border-dashed border-gray-200">
                   <ShoppingBag className="w-12 h-12 text-gray-300 mx-auto mb-4" />
                   <p className="text-gray-500 font-medium">No orders found.</p>
-                  <Link to="/products" className="mt-4 inline-block text-emerald-500 font-bold hover:underline">Start Shopping</Link>
+                  <Link to="/products" className="mt-4 inline-block hover:cursor-pointer text-emerald-500 font-bold hover:underline">Start Shopping</Link>
                 </div>
               )}
             </div>
           )}
 
           {activeTab === 'reviews' && (
-            <div className="bg-white/70 backdrop-blur-xl border border-white/60 rounded-3xl p-8 shadow-xl">
-              <h3 className="text-2xl font-bold text-gray-900 mb-8 font-dm">My Reviews</h3>
+            <div className="bg-white/30 backdrop-blur-3xl border border-white/50 rounded-[2.5rem] p-10 shadow-2xl shadow-gray-200/50">
+              <h3 className="text-3xl font-black text-gray-900 mb-10 font-dm tracking-tight">My Reviews</h3>
               
               {loading ? (
                 <div className="py-20 flex justify-center"><div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent animate-spin rounded-full"></div></div>
@@ -440,7 +440,7 @@ const MyAccount = () => {
                 <div className="text-center py-20 bg-gray-50/50 rounded-3xl border-2 border-dashed border-gray-200">
                   <Star className="w-12 h-12 text-gray-300 mx-auto mb-4" />
                   <p className="text-gray-500 font-medium">You haven't reviewed any products yet.</p>
-                  <Link to="/products" className="mt-4 inline-block text-emerald-500 font-bold hover:underline">Start Shopping</Link>
+                  <Link to="/products" className="mt-4 inline-block text-emerald-500 hover:cursor-pointer font-bold hover:underline">Start Shopping</Link>
                 </div>
               )}
             </div>

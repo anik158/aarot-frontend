@@ -190,10 +190,10 @@ const Checkout = () => {
 
     if (fetchingCart) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <div className="text-center">
-                    <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent animate-spin rounded-full mx-auto mb-4"></div>
-                    <h2 className="text-xl font-semibold">Loading checkout...</h2>
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center bg-white/30 backdrop-blur-3xl p-12 rounded-[2.5rem] border border-white/60 shadow-2xl">
+                    <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent animate-spin rounded-full mx-auto mb-6"></div>
+                    <h2 className="text-2xl font-black text-gray-900 font-dm tracking-tight">Loading checkout...</h2>
                 </div>
             </div>
         );
@@ -211,15 +211,15 @@ const Checkout = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 p-3">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h1 className="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
+        <section className="w-full py-20 px-4 min-h-screen relative flex flex-col items-center">
+            <h1 className="text-6xl font-black font-dm tracking-tighter text-gray-900 mb-16 relative z-10">Checkout</h1>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-7xl w-full">
 
-                    <div className="lg:col-span-7 space-y-8">
-                        <div className="bg-white rounded-2xl shadow-sm p-6">
-                            <h2 className="text-xl font-semibold mb-6">Shipping Address</h2>
+                    <div className="lg:col-span-7 space-y-8 pb-10">
+                        <div className="bg-white/30 backdrop-blur-3xl border border-white/60 rounded-[2.5rem] p-10 shadow-2xl shadow-gray-200/50 relative group">
+                            <div className="absolute -top-32 -left-32 w-64 h-64 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none group-hover:bg-emerald-400/20 transition-all duration-700"></div>
+                            <h2 className="text-2xl font-black mb-10 text-gray-900 font-dm tracking-tight">Shipping Address</h2>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="md:col-span-2">
@@ -296,8 +296,8 @@ const Checkout = () => {
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-2xl shadow-sm p-6">
-                            <h2 className="text-xl font-semibold mb-6">Order Items</h2>
+                        <div className="bg-white/40 backdrop-blur-3xl border border-white/50 rounded-[2.5rem] p-10 shadow-2xl shadow-gray-200/50">
+                            <h2 className="text-2xl font-black mb-10 text-gray-900 font-dm tracking-tight">Order Items</h2>
                             <div className="space-y-6">
                                 {cartItems.map((item) => (
                                     <div key={`${item.productId}-${item.colorId}-${item.sizeId}`} className="flex gap-4 border-b pb-6 last:border-b-0">
@@ -316,9 +316,10 @@ const Checkout = () => {
                         </div>
                     </div>
 
-                    <div className="lg:col-span-5">
-                        <div className="bg-white/70 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 p-7 border border-white/60 sticky top-6">
-                            <h2 className="text-xl font-bold mb-6 text-gray-900 font-dm">Order Summary</h2>
+                    <div className="lg:col-span-5 relative z-10 shrink-0">
+                        <div className="bg-white/20 backdrop-blur-3xl rounded-[2.5rem] shadow-2xl shadow-gray-200/50 p-12 border border-white/60 sticky top-24 overflow-hidden group">
+                            <div className="absolute -top-24 -right-24 w-48 h-48 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none group-hover:bg-emerald-400/20 transition-all duration-700"></div>
+                            <h2 className="text-3xl font-black mb-10 text-gray-900 font-dm tracking-tighter relative z-10">Order Summary</h2>
                             <div className="space-y-4">
                                 <div className="flex justify-between font-medium">
                                     <span className="text-gray-600">Subtotal</span>
@@ -364,7 +365,7 @@ const Checkout = () => {
                                     {/* Stripe */}
                                     <label
                                         className={`flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all ${
-                                            paymentMethod === 'stripe' ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-gray-300'
+                                            paymentMethod === 'stripe' ? 'border-emerald-500 bg-white/50 shadow-md' : 'border-white/40 bg-white/20 hover:border-white/60'
                                         }`}
                                     >
                                         <input
@@ -405,8 +406,7 @@ const Checkout = () => {
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+        </section>
     );
 };
 

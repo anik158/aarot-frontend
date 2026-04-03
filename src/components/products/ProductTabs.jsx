@@ -121,8 +121,11 @@ const ProductTabs = ({ product, activeTab, onTabChange, onReviewAdded }) => {
             </div>
 
             <div className="lg:col-span-1">
-              <div className="bg-white/70 backdrop-blur-xl p-6 rounded-3xl border border-white/60 shadow-xl shadow-gray-200/50 sticky top-24">
-                <h3 className="text-xl font-bold text-gray-900 mb-6 font-dm">Leave a review</h3>
+              <div className="bg-white/40 backdrop-blur-3xl p-8 rounded-[2rem] border border-white/60 shadow-2xl shadow-gray-200/50 sticky top-24 overflow-hidden relative group">
+                {/* Subtle glow background */}
+                <div className="absolute -top-16 -right-16 w-32 h-32 bg-emerald-400/10 rounded-full blur-3xl group-hover:bg-emerald-400/20 transition-all duration-500"></div>
+                
+                <h3 className="text-2xl font-black text-gray-900 mb-8 font-dm tracking-tight relative z-10">Leave a review</h3>
                 {isLoggedIn ? (
                   <form onSubmit={handleSubmitReview} className="space-y-4">
                     <div>

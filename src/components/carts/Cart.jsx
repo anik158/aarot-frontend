@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
-import { Plus, Minus, BadgeX } from 'lucide-react';
+import {Send, Plus, Minus, BadgeX } from 'lucide-react';
 import { toast } from "react-toastify";
 import axiosRequest from "../../helpers/config.js";
 import { useDispatch } from "react-redux";
@@ -108,12 +108,13 @@ const Cart = () => {
     }
 
     return (
-        <section className="w-full bg-white py-9 px-8">
-            <h1 className="text-center text-[#191919] text-[32px] font-semibold">My Shopping Cart</h1>
+        <section className="w-full py-20 px-4 min-h-screen relative flex flex-col items-center">
+            <h1 className="text-6xl font-black font-dm tracking-tighter text-gray-900 mb-16 relative z-10 text-center">Shopping Cart</h1>
 
-            <div className="flex items-start mt-8 gap-6">
-                <div className="bg-white px-4 w-[800px] rounded-xl">
-                    <table className="w-full bg-white rounded-2xl shadow-2xl">
+            <div className="flex flex-col lg:flex-row items-start gap-12 max-w-7xl mx-auto justify-center relative z-10 w-full">
+                <div className="bg-white/30 backdrop-blur-3xl border border-white/60 p-10 rounded-[2.5rem] shadow-2xl w-full lg:w-[850px] shrink-0 relative group">
+                    <div className="absolute -top-32 -left-32 w-64 h-64 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none group-hover:bg-emerald-400/20 transition-all duration-700"></div>
+                    <table className="w-full">
                         <thead>
                         <tr className="text-center border-b border-gray-400 text-[#7f7f7f] text-sm font-medium uppercase">
                             <th className="text-left px-2 py-2">Product</th>
@@ -177,8 +178,8 @@ const Cart = () => {
                     </table>
                 </div>
 
-                <div className="w-[424px] bg-white shadow-2xl rounded-lg p-6">
-                    <h2 className="text-xl font-medium mb-4">Cart Total</h2>
+                <div className="w-[424px] bg-white/40 backdrop-blur-3xl border border-white/60 rounded-[2.5rem] p-10 shadow-2xl shadow-gray-200/50">
+                    <h2 className="text-2xl font-black mb-8 font-dm tracking-tight text-gray-900">Cart Total</h2>
                     <div className="space-y-3">
                         <div className="flex justify-between">
                             <span>Subtotal</span>
@@ -197,9 +198,9 @@ const Cart = () => {
 
                     <Link
                         to="/checkout"
-                        className="block w-full text-center mt-6 py-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl font-semibold"
+                        className="flex items-center justify-center gap-3 w-full mt-8 py-5 bg-emerald-500 hover:bg-emerald-600 hover:cursor-pointer text-white rounded-2xl font-black text-lg transition-all duration-300 shadow-2xl shadow-emerald-500/40 hover:scale-[1.02] active:scale-[0.98] tracking-tight"
                     >
-                        Proceed to checkout
+                        <Send className="w-5 h-5" /> Proceed to Checkout
                     </Link>
                 </div>
             </div>

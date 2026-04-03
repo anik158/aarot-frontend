@@ -31,9 +31,15 @@ function App() {
                       <Route
                           path="/*"
                           element={
-                              <main className="min-h-screen bg-[#f8fafc] relative overflow-hidden">
+                              <main className="min-h-screen bg-[#f3f7fa] relative overflow-hidden">
                                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.12)_0%,transparent_55%)] pointer-events-none"></div>
                                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_70%,rgba(16,185,129,0.10)_0%,transparent_55%)] pointer-events-none"></div>
+
+{/* For more bright emerald on top left */}
+ {/* <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(16,185,129,0.18)_0%,transparent_50%)] pointer-events-none"></div>
+                                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(59,130,246,0.15)_0%,transparent_50%)] pointer-events-none"></div>
+                                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(255,255,255,0.4)_0%,transparent_60%)] pointer-events-none"></div>
+ */}
 
                                   <Routes>
                                       <Route path="/cart" element={<Cart />} />
