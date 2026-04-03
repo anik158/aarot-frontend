@@ -123,6 +123,11 @@ const Product = () => {
     }
   };
 
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href);
+    toast.success("Link copied to clipboard!");
+  };
+
 
   if (loading) {
     return (
@@ -144,6 +149,13 @@ const Product = () => {
       </div>
     );
   }
+
+  const handleReviewAdded = (newReview) => {
+    setProduct((prev) => ({
+      ...prev,
+      reviews: [newReview, ...(prev.reviews || [])],
+    }));
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -188,9 +200,15 @@ const Product = () => {
                 <div className="flex gap-2">
                   <button 
                     onClick={handleToggleFavorite}
-                    className={`w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center transition-all duration-300 ${isFavorite ? 'bg-red-50 border-red-200' : 'hover:bg-gray-50'}`}
+                    className={`w-10 h-10 rounded-full border border-gray-200 hover:cursor-pointer flex items-center justify-center transition-all duration-300 ${isFavorite ? 'bg-red-50 border-red-200' : 'hover:bg-gray-50'}`}
                   >
                     <Heart className={`w-5 h-5 transition-colors duration-300 ${isFavorite ? 'text-red-500 fill-red-500' : 'text-gray-600'}`} />
+                  </button>
+                  <button 
+                    onClick={handleShare}
+                    className="w-10 h-10 rounded-full border border-gray-200 hover:cursor-pointer flex items-center justify-center hover:bg-gray-50 transition-colors"
+                  >
+                    <Share2 className="w-5 h-5 text-gray-600" />
                   </button>
                 </div>
               </div>
@@ -262,6 +280,7 @@ const Product = () => {
             product={product} 
             activeTab={activeTab} 
             onTabChange={setActiveTab} 
+            onReviewAdded={handleReviewAdded}
           />
         </div>
       </div>
