@@ -13,6 +13,7 @@ import Checkout from "./components/checkout/Checkout.jsx";
 import OrderConfirmation from "./pages/Orderconfirmation.jsx";
 import React from "react";
 import MyOrders from "./pages/MyOrders.jsx";
+import AllProducts from "./pages/AllProducts.jsx";
 
 function App() {
 
@@ -31,6 +32,7 @@ function App() {
                               <main className="container mx-auto px-4 py-2 md:px-6 lg:px-8">
                                   <Routes>
                                       <Route path="/cart" element={<Cart />} />
+                                      <Route path="/products" element={<AllProducts />} />
                                       <Route path="/products/:productId" element={<Product />} />
                                       <Route path="/sign-up" element={<SignUpForm />} />
                                       <Route path="/sign-in" element={<SignInForm />} />
