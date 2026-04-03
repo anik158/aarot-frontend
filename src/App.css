@@ -1,8 +1,12 @@
-@keyframes shimmer {
-    0% { transform: translateX(-200%); }
-    100% { transform: translateX(400%); }
+@keyframes windWave {
+    0%   { transform: translateX(-200%) translateY(0) skewX(-20deg); }
+    25%  { transform: translateX(-100%) translateY(-10px) skewX(-10deg); }
+    50%  { transform: translateX(0%) translateY(10px) skewX(10deg); }
+    75%  { transform: translateX(100%) translateY(-10px) skewX(-15deg); }
+    100% { transform: translateX(200%) translateY(0) skewX(-20deg); }
 }
 
-.animate-shimmer {
-    animation: shimmer 10s linear infinite;
+.animate-wind {
+    animation: windWave 9s ease-in-out infinite;
+    opacity: 1;
 }

@@ -1,20 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import ProductList from './components/products/ProductList';
 import { axiosRequest } from './helpers/config';
-import { ShoppingBag, Truck, Shield, RotateCcw } from 'lucide-react';
+import { Truck, Shield, RotateCcw, ShoppingBag } from 'lucide-react';
 
 const Home = () => {
-    const [products, setProducts] = useState([]);
-    const [colors, setColors] = useState([]);
-    const [sizes, setSizes] = useState([]);
+    const [featuredProducts, setFeaturedProducts] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // Filters
-    const [selectedSize, setSelectedSize] = useState('');
-    const [selectedColor, setSelectedColor] = useState('');
-    const [searchTerm, setSearchTerm] = useState('');
-
-    // Mouse follow effect for hero
+    // Mouse follow effect
     useEffect(() => {
         const handleMouseMove = (e) => {
             const hero = document.getElementById('hero');
@@ -32,59 +25,48 @@ const Home = () => {
         return () => window.removeEventListener('mousemove', handleMouseMove);
     }, []);
 
-    // Fetch products
+    // Fetch latest 3 products
     useEffect(() => {
-        const fetchProducts = async () => {
+        const fetchFeatured = async () => {
             try {
                 setLoading(true);
-                const params = new URLSearchParams();
-
-                if (selectedSize) params.append('size', selectedSize);
-                if (selectedColor) params.append('color', selectedColor);
-                if (searchTerm) params.append('search', searchTerm);
-
-                const url = `products${params.toString() ? '?' + params.toString() : ''}`;
-                const response = await axiosRequest.get(url);
-
-                setProducts(response.data.data || []);
-                setColors(response.data.colors || []);
-                setSizes(response.data.sizes || []);
+                const response = await axiosRequest.get('/products/featured?limit=3');
+                setFeaturedProducts(response.data.data || []);
             } catch (e) {
                 console.error(e);
             } finally {
                 setLoading(false);
             }
         };
-
-        fetchProducts();
-    }, [selectedSize, selectedColor, searchTerm]);
+        fetchFeatured();
+    }, []);
 
     return (
         <>
-            {/* Premium Hero Banner - Refined */}
+            {/* Premium Hero Banner */}
+
             <section
                 id="hero"
-                className="relative h-[75vh] flex items-center justify-center overflow-hidden bg-black w-full"
+                className="relative h-[78vh] flex items-center justify-center overflow-hidden bg-black w-full"
             >
+
                 {/* Background Image */}
                 <div
                     className="absolute inset-0 bg-cover bg-center scale-105"
-                    style={{
-                        backgroundImage: `url('https://picsum.photos/id/1015/1920/1080')`
-                    }}
+                    style={{ backgroundImage: `url('https://picsum.photos/id/1015/1920/1080')` }}
                 />
 
                 {/* Dark Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/70 to-black/85"></div>
 
-                {/* Subtle Silver Shine */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent animate-shimmer"></div>
+                {/* Enhanced Silver Shine - More Visible & Wavy */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-wind"></div>
 
                 {/* Elegant Mouse Following Light */}
                 <div
-                    className="absolute inset-0 pointer-events-none transition-all duration-200"
+                    className="absolute inset-0 pointer-events-none transition-all duration-300"
                     style={{
-                        background: `radial-gradient(circle 220px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.22), transparent 65%)`
+                        background: `radial-gradient(circle 240px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.20), transparent 70%)`
                     }}
                 />
 
@@ -102,22 +84,13 @@ const Home = () => {
                         Premium products • Honest prices • Fast delivery across Bangladesh
                     </p>
 
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <a
-                            href="#products"
-                            className="group relative inline-flex items-center justify-center px-10 py-4 bg-white text-black font-semibold text-lg rounded-2xl overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-xl"
-                        >
-                            <span className="relative z-10">Shop Now</span>
-                            <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-400 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                        </a>
-
-                        <a
-                            href="#why-us"
-                            className="inline-flex items-center justify-center px-10 py-4 border border-white/60 text-white font-semibold text-lg rounded-2xl hover:bg-white/10 transition-all"
-                        >
-                            Learn More
-                        </a>
-                    </div>
+                    <a
+                        href="#featured"
+                        className="group relative inline-flex items-center justify-center px-10 py-4 bg-white text-black font-semibold text-lg rounded-2xl overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-xl"
+                    >
+                        <span className="relative z-10">Shop Now</span>
+                        <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-400 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                    </a>
                 </div>
 
                 {/* Scroll Indicator */}
@@ -161,53 +134,13 @@ const Home = () => {
                 </div>
             </div>
 
-            {/* Filters + Products Section */}
-            <div id="products" className="max-w-7xl mx-auto px-6 py-16">
+            {/* Featured Products - Latest 3 */}
+            <div id="featured" className="max-w-7xl mx-auto px-6 py-16">
                 <div className="flex justify-between items-end mb-10">
-                    <h2 className="text-4xl font-bold text-gray-900">Our Collection</h2>
-                    <p className="text-gray-500 text-lg">{products.length} products found</p>
-                </div>
-
-                {/* Filters */}
-                <div className="bg-white p-6 rounded-3xl shadow-sm mb-12 flex flex-wrap gap-4 items-center">
-                    <select
-                        value={selectedSize}
-                        onChange={(e) => setSelectedSize(e.target.value)}
-                        className="border border-gray-300 rounded-2xl px-5 py-3.5 focus:outline-none focus:border-emerald-500"
-                    >
-                        <option value="">All Sizes</option>
-                        {sizes.map(size => (
-                            <option key={size.id} value={size.id}>{size.name}</option>
-                        ))}
-                    </select>
-
-                    <select
-                        value={selectedColor}
-                        onChange={(e) => setSelectedColor(e.target.value)}
-                        className="border border-gray-300 rounded-2xl px-5 py-3.5 focus:outline-none focus:border-emerald-500"
-                    >
-                        <option value="">All Colors</option>
-                        {colors.map(color => (
-                            <option key={color.id} value={color.id}>{color.name}</option>
-                        ))}
-                    </select>
-
-                    <input
-                        type="text"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="Search products..."
-                        className="border border-gray-300 rounded-2xl px-5 py-3.5 focus:outline-none focus:border-emerald-500 flex-1 min-w-[300px]"
-                    />
-
-                    {(selectedSize || selectedColor || searchTerm) && (
-                        <button
-                            onClick={() => { setSelectedSize(''); setSelectedColor(''); setSearchTerm(''); }}
-                            className="text-red-600 hover:text-red-700 font-medium px-6"
-                        >
-                            Clear All
-                        </button>
-                    )}
+                    <h2 className="text-4xl font-bold text-gray-900">Latest Products</h2>
+                    <a href="/products" className="text-emerald-600 hover:underline font-medium">
+                        View All Products →
+                    </a>
                 </div>
 
                 {loading ? (
@@ -215,7 +148,7 @@ const Home = () => {
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
                     </div>
                 ) : (
-                    <ProductList products={products} />
+                    <ProductList products={featuredProducts} />
                 )}
             </div>
         </>
