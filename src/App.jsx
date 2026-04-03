@@ -14,6 +14,7 @@ import OrderConfirmation from "./pages/Orderconfirmation.jsx";
 import React from "react";
 import MyOrders from "./pages/MyOrders.jsx";
 import AllProducts from "./pages/AllProducts.jsx";
+import MyAccount from "./pages/MyAccount.jsx";
 import Footer from "./components/footer/Footer.jsx";
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
                                       <Route path="/checkout" element={<Checkout />} />
                                       <Route path="/order-confirmation/:orderNumber" element={<OrderConfirmation />} />
                                       <Route path="/my-orders" element={<MyOrders />} />
+                                      <Route path="/my-account" element={<MyAccount />} />
                                   </Routes>
                               </main>
                           }

@@ -75,13 +75,7 @@ const Header = () => {
                     </div>
                     <ul className="hidden items-center justify-center gap-6 md:flex">
                         <li className="pt-1.5 font-dm text-sm font-medium text-slate-700">
-                            <a href="#">Pricing</a>
-                        </li>
-                        <li className="pt-1.5 font-dm text-sm font-medium text-slate-700">
-                            <a href="#">Blog</a>
-                        </li>
-                        <li className="pt-1.5 font-dm text-sm font-medium text-slate-700">
-                            <a href="#">Docs</a>
+                            <Link to="/products" className="hover:text-emerald-500 transition-colors">Products</Link>
                         </li>
                     </ul>
                     <div className="grow"></div>
@@ -115,10 +109,10 @@ const Header = () => {
                         }
                         {
                             (isLoggedIn && (<Link
-                                to={'/my-orders'}
+                                to={'/my-account'}
                                 className="rounded-md bg-linear-to-br from-green-600 to-emerald-400 px-3 py-1.5 font-dm text-sm font-medium text-white shadow-md shadow-green-400/50 transition-transform duration-200 ease-in-out hover:scale-[1.03]"
                             >
-                                My Orders
+                                My Account
                             </Link>) )
                         }
 
