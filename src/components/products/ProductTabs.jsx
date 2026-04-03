@@ -121,7 +121,7 @@ const ProductTabs = ({ product, activeTab, onTabChange, onReviewAdded }) => {
             </div>
 
             <div className="lg:col-span-1">
-              <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-xl shadow-gray-200/50 sticky top-24">
+              <div className="bg-white/70 backdrop-blur-xl p-6 rounded-3xl border border-white/60 shadow-xl shadow-gray-200/50 sticky top-24">
                 <h3 className="text-xl font-bold text-gray-900 mb-6 font-dm">Leave a review</h3>
                 {isLoggedIn ? (
                   <form onSubmit={handleSubmitReview} className="space-y-4">

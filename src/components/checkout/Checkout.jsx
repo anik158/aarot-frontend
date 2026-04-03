@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Send, CreditCard, Banknote } from 'lucide-react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Navigate, useLocation, useNavigate} from 'react-router-dom';
 import {toast} from "react-toastify";
@@ -316,34 +317,36 @@ const Checkout = () => {
                     </div>
 
                     <div className="lg:col-span-5">
-                        <div className="bg-white rounded-2xl shadow-sm p-6 sticky top-6">
-                            <h2 className="text-xl font-semibold mb-6">Order Summary</h2>
+                        <div className="bg-white/70 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 p-7 border border-white/60 sticky top-6">
+                            <h2 className="text-xl font-bold mb-6 text-gray-900 font-dm">Order Summary</h2>
                             <div className="space-y-4">
-                                <div className="flex justify-between">
-                                    <span>Subtotal</span>
-                                    <span>${subtotal.toFixed(2)}</span>
+                                <div className="flex justify-between font-medium">
+                                    <span className="text-gray-600">Subtotal</span>
+                                    <span className="text-gray-900">${subtotal.toFixed(2)}</span>
                                 </div>
-                                <div className="flex justify-between">
-                                    <span>Shipping</span>
-                                    <span className="text-green-600">Free</span>
+                                <div className="flex justify-between font-medium">
+                                    <span className="text-gray-600">Shipping</span>
+                                    <span className="text-emerald-500">Free</span>
                                 </div>
-                                <hr />
-                                <div className="flex justify-between text-lg font-bold">
+                                <hr className="border-gray-200/50" />
+                                <div className="flex justify-between text-xl font-black text-gray-900">
                                     <span>Total</span>
                                     <span>${subtotal.toFixed(2)}</span>
                                 </div>
                             </div>
+                            
                             {/* Payment Method Selection */}
-                            <div className="bg-white rounded-2xl shadow-sm p-6 mt-8">
-                                <h2 className="text-xl font-semibold mb-6">Payment Method</h2>
+                            <div className="mt-10">
+                                <h2 className="text-xl font-bold mb-6 text-gray-900 font-dm">Payment Method</h2>
 
                                 <div className="grid grid-cols-1 gap-4">
                                     {/* Cash on Delivery */}
                                     <label
-                                        className={`flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all ${
-                                            paymentMethod === 'cod' ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-gray-300'
+                                        className={`flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all duration-300 ${
+                                            paymentMethod === 'cod' ? 'border-emerald-500 bg-white/50 shadow-md' : 'border-white/40 bg-white/20 hover:border-white/60'
                                         }`}
                                     >
+
                                         <input
                                             type="radio"
                                             name="paymentMethod"
@@ -393,7 +396,10 @@ const Checkout = () => {
                                         Processing Order...
                                     </>
                                 ) : (
-                                    'Place Order'
+                                      <>
+                                <Send className="w-5 h-5" />
+                                Place Order
+                                </>
                                 )}
                             </button>
                         </div>
