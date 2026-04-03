@@ -1,12 +1,19 @@
-@keyframes windWave {
-    0%   { transform: translateX(-200%) translateY(0) skewX(-20deg); }
-    25%  { transform: translateX(-100%) translateY(-10px) skewX(-10deg); }
-    50%  { transform: translateX(0%) translateY(10px) skewX(10deg); }
-    75%  { transform: translateX(100%) translateY(-10px) skewX(-15deg); }
-    100% { transform: translateX(200%) translateY(0) skewX(-20deg); }
+@keyframes wind-shimmer {
+    0%   { transform: translateX(-220%) skewX(-30deg); opacity: 0.25; }
+    35%  { transform: translateX(30%) skewX(20deg); opacity: 0.45; }
+    65%  { transform: translateX(140%) skewX(-25deg); opacity: 0.38; }
+    100% { transform: translateX(280%) skewX(-30deg); opacity: 0.25; }
 }
 
-.animate-wind {
-    animation: windWave 9s ease-in-out infinite;
-    opacity: 1;
+.animate-wind-shimmer {
+    animation: wind-shimmer 8s linear infinite;
+}
+
+@keyframes shine-slow {
+    0%   { transform: translateX(-150%); }
+    100% { transform: translateX(250%); }
+}
+
+.animate-shine-slow {
+    animation: shine-slow 5s linear infinite;
 }

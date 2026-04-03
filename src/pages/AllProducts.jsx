@@ -71,7 +71,7 @@ const AllProducts = () => {
             </div>
 
             {/* Filters */}
-            <div className="bg-white p-6 rounded-3xl shadow-sm mb-12 flex flex-wrap gap-4 items-center">
+            <div className="relative z-50 bg-white p-6 rounded-3xl shadow-sm mb-12 flex flex-wrap gap-4 items-center">
                 <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}

@@ -14,6 +14,7 @@ import OrderConfirmation from "./pages/Orderconfirmation.jsx";
 import React from "react";
 import MyOrders from "./pages/MyOrders.jsx";
 import AllProducts from "./pages/AllProducts.jsx";
+import Footer from "./components/footer/Footer.jsx";
 
 function App() {
 
@@ -29,7 +30,10 @@ function App() {
                       <Route
                           path="/*"
                           element={
-                              <main className="container mx-auto px-4 py-2 md:px-6 lg:px-8">
+                              <main className="min-h-screen bg-[#f8fafc] relative overflow-hidden">
+                                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.12)_0%,transparent_55%)]"></div>
+                                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_70%,rgba(16,185,129,0.10)_0%,transparent_55%)]"></div>
+
                                   <Routes>
                                       <Route path="/cart" element={<Cart />} />
                                       <Route path="/products" element={<AllProducts />} />
@@ -44,6 +48,7 @@ function App() {
                           }
                       />
                   </Routes>
+                  <Footer/>
               </BrowserRouter>
           </PersistGate>
       </Provider>
