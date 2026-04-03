@@ -22,18 +22,26 @@ function App() {
           <PersistGate persistor={persistStorage}>
               <BrowserRouter>
                   <Header/>
-                  <main className="container mx-auto px-4 py-2 md:px-2 lg:px-4">
-                      <Routes>
-                          <Route path="/" element={<Home />} />
-                          <Route path="/cart" element={<Cart/>}></Route>
-                          <Route path="/products/:productId" element={<Product/>} />
-                          <Route path="/sign-up" element={<SignUpForm/>} />
-                          <Route path="/sign-in" element={<SignInForm/>} />
-                          <Route path={'/checkout'} element={<Checkout/>} />
-                          <Route path="/order-confirmation/:orderNumber" element={<OrderConfirmation />} />
-                          <Route path="/my-orders" element={<MyOrders />} />
-                      </Routes>
-                  </main>
+                  <Routes>
+                      <Route path="/" element={<Home />} />
+
+                      <Route
+                          path="/*"
+                          element={
+                              <main className="container mx-auto px-4 py-2 md:px-6 lg:px-8">
+                                  <Routes>
+                                      <Route path="/cart" element={<Cart />} />
+                                      <Route path="/products/:productId" element={<Product />} />
+                                      <Route path="/sign-up" element={<SignUpForm />} />
+                                      <Route path="/sign-in" element={<SignInForm />} />
+                                      <Route path="/checkout" element={<Checkout />} />
+                                      <Route path="/order-confirmation/:orderNumber" element={<OrderConfirmation />} />
+                                      <Route path="/my-orders" element={<MyOrders />} />
+                                  </Routes>
+                              </main>
+                          }
+                      />
+                  </Routes>
               </BrowserRouter>
           </PersistGate>
       </Provider>
