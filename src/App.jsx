@@ -16,6 +16,7 @@ import MyOrders from "./pages/MyOrders.jsx";
 import AllProducts from "./pages/AllProducts.jsx";
 import MyAccount from "./pages/MyAccount.jsx";
 import Footer from "./components/footer/Footer.jsx";
+import ProtectedRoute from "./components/auth/ProtectedRoute.jsx";
 
 function App() {
 
@@ -49,8 +50,22 @@ function App() {
                                       <Route path="/sign-in" element={<SignInForm />} />
                                       <Route path="/checkout" element={<Checkout />} />
                                       <Route path="/order-confirmation/:orderNumber" element={<OrderConfirmation />} />
-                                      <Route path="/my-orders" element={<MyOrders />} />
-                                      <Route path="/my-account" element={<MyAccount />} />
+                                      <Route 
+                                        path="/my-orders" 
+                                        element={
+                                            <ProtectedRoute>
+                                                <MyOrders />
+                                            </ProtectedRoute>
+                                        } 
+                                      />
+                                      <Route 
+                                        path="/my-account" 
+                                        element={
+                                            <ProtectedRoute>
+                                                <MyAccount />
+                                            </ProtectedRoute>
+                                        } 
+                                      />
                                   </Routes>
                               </main>
                           }

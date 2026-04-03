@@ -39,7 +39,7 @@ export const validateField = (name, value, form) => {
 export const getInputClasses = (fieldName, touched, errors) => {
     const hasError = touched[fieldName] && errors[fieldName];
     return `
-      h-full px-2 w-full outline-none bg-transparent
+      w-full outline-none bg-transparent py-4 text-base font-medium text-gray-700 placeholder:text-gray-400
       ${hasError ? "text-red-700" : ""}
     `;
 };
@@ -47,8 +47,8 @@ export const getInputClasses = (fieldName, touched, errors) => {
 export const getContainerClasses = (fieldName, touched, errors) => {
     const hasError = touched[fieldName] && errors[fieldName];
     return `
-      flex items-center mt-2 mb-1 h-10 pl-3 border rounded-full
-      transition-all overflow-hidden
+      flex items-center mt-2 mb-1 pl-5 border rounded-2xl
+      transition-all overflow-hidden bg-white/20 hover:bg-white/40 focus-within:bg-white/60 shadow-inner
       ${hasError
             ? "border-red-400 focus-within:ring-2 focus-within:ring-red-400"
             : "border-slate-300 focus-within:ring-2 focus-within:ring-emerald-400"}
