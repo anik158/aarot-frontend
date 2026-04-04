@@ -46,7 +46,7 @@ const Footer = () => {
                 </div>
 
                 <div className="border-t border-zinc-800 mt-12 pt-8 text-center text-xs text-gray-500">
-                    © {new Date().getFullYear()} Your Store. All rights reserved. Crafted in Bangladesh.
+                    © {new Date().getFullYear()} aarot. All rights reserved. Crafted in Bangladesh.
                 </div>
             </div>
         </footer>
