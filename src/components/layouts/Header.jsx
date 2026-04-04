@@ -61,7 +61,7 @@ const Header = () => {
             <header className="App-Header fixed top-6 inset-x-0 z-50 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
                 <nav className="flex items-center gap-8 bg-white/40 backdrop-blur-3xl border border-white/60 rounded-[2.5rem] p-4 px-8 lg:px-12 shadow-2xl shadow-gray-200/50 transition-all duration-300 hover:bg-white/50">
                     <div className="relative flex items-center">
-                        <Link to={'/'} className="hover:scale-110 transition-transform">
+                        <Link to={'/'} className="hover:scale-110 transition-transform flex items-center gap-3">
                             <img
                                 src="https://www.svgrepo.com/show/499831/target.svg"
                                 loading="lazy"
@@ -70,12 +70,13 @@ const Header = () => {
                                 height="40"
                                 alt="Logo"
                             />
+                            <span className="text-2xl font-black tracking-tighter text-gray-900 font-dm">aarot</span>
                         </Link>
                     </div>
 
                     <ul className="hidden items-center justify-center gap-10 md:flex">
                         <li>
-                            <Link to="/products" className="font-dm text-sm font-bold text-gray-800 hover:text-emerald-500 transition-all relative group">
+                            <Link to="/products" className="font-dm text-sm font-bold text-gray-600 hover:text-emerald-400 transition-all relative group">
                                 Products
                                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-emerald-500 transition-all duration-300 group-hover:w-full"></span>
                             </Link>
