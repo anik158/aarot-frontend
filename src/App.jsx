@@ -32,7 +32,7 @@ function App() {
                       <Route
                           path="/*"
                           element={
-                              <main className="min-h-screen bg-[#f3f7fa] relative overflow-hidden">
+                              <main className="min-h-screen bg-[#f3f7fa] relative overflow-hidden pt-28">
                                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.12)_0%,transparent_55%)] pointer-events-none"></div>
                                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_70%,rgba(16,185,129,0.10)_0%,transparent_55%)] pointer-events-none"></div>
 

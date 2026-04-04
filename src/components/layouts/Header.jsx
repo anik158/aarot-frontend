@@ -58,82 +58,92 @@ const Header = () => {
 
     return (
         <>
-            <header className="App-Header sticky inset-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur-lg">
-                <nav className="mx-auto flex max-w-6xl gap-8 px-6 transition-all duration-200 ease-in-out lg:px-12 py-4">
+            <header className="App-Header fixed top-6 inset-x-0 z-50 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <nav className="flex items-center gap-8 bg-white/40 backdrop-blur-3xl border border-white/60 rounded-[2.5rem] p-4 px-8 lg:px-12 shadow-2xl shadow-gray-200/50 transition-all duration-300 hover:bg-white/50">
                     <div className="relative flex items-center">
-                        <Link to={'/'}>
+                        <Link to={'/'} className="hover:scale-110 transition-transform">
                             <img
                                 src="https://www.svgrepo.com/show/499831/target.svg"
                                 loading="lazy"
                                 style={{ color: "transparent" }}
-                                width="32"
-                                height="32"
-                                alt=""
+                                width="40"
+                                height="40"
+                                alt="Logo"
                             />
                         </Link>
-
                     </div>
-                    <ul className="hidden items-center justify-center gap-6 md:flex">
-                        <li className="pt-1.5 font-dm text-sm font-medium text-slate-700">
-                            <Link to="/products" className="hover:text-emerald-500 transition-colors">Products</Link>
+
+                    <ul className="hidden items-center justify-center gap-10 md:flex">
+                        <li>
+                            <Link to="/products" className="font-dm text-sm font-bold text-gray-800 hover:text-emerald-500 transition-all relative group">
+                                Products
+                                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-emerald-500 transition-all duration-300 group-hover:w-full"></span>
+                            </Link>
                         </li>
                     </ul>
+
                     <div className="grow"></div>
-                    <div className="hidden items-center justify-center gap-6 md:flex">
-                        <Link className="rounded-md bg-linear-to-br from-green-600 to-emerald-400 px-3 py-1.5 font-dm text-sm font-medium text-white shadow-md shadow-green-400/50 transition-transform duration-200 ease-in-out hover:scale-[1.03] hover:cursor-pointer inline-flex items-center gap-2" to={'/cart'}>
-                            <ShoppingCart className="w-5 h-5" />
-                            Cart{" "} <span className={`px-2 py-0.5 rounded-md ${ cartItems.length > 0 ? "bg-red-600 text-white" : "bg-transparent" }`} > {cartItems.length} </span>
+
+                    <div className="hidden items-center justify-center gap-8 md:flex">
+                        <Link 
+                            className="bg-white/50 backdrop-blur-md border border-white/60 px-5 py-2.5 rounded-full font-dm text-sm font-bold text-gray-800 shadow-lg shadow-gray-200/50 transition-all duration-300 hover:scale-[1.05] hover:cursor-pointer inline-flex items-center gap-3 group" 
+                            to={'/cart'}
+                        >
+                            <div className="relative">
+                                <ShoppingCart className="w-5 h-5 text-emerald-600 group-hover:scale-110 transition-transform" />
+                                {cartItems.length > 0 && (
+                                    <span className="absolute -top-3 -right-3 bg-red-500 text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full shadow-lg border-2 border-white animate-in zoom-in">
+                                        {cartItems.length}
+                                    </span>
+                                )}
+                            </div>
+                            <span>Cart</span>
                         </Link>
+
                         {isLoggedIn ? (
-                            <button
-                                className="font-dm text-sm hover:cursor-pointer font-medium text-slate-700"
-                                onClick={handleLogout}
-                            >
-                                Sign out
-                            </button>
+                            <div className="flex items-center gap-6">
+                                <Link
+                                    to={'/my-account'}
+                                    className="bg-emerald-500 text-white px-6 py-2.5 rounded-full font-dm text-sm font-black shadow-xl shadow-emerald-500/30 transition-all duration-300 hover:scale-[1.05] hover:bg-emerald-600 active:scale-[0.98] tracking-tight"
+                                >
+                                    My Account
+                                </Link>
+                                <button
+                                    className="font-dm text-sm font-bold text-gray-500 hover:text-gray-900 transition-colors hover:cursor-pointer"
+                                    onClick={handleLogout}
+                                >
+                                    Sign out
+                                </button>
+                            </div>
                         ) : (
-                            <Link
-                                className="font-dm text-sm font-medium text-slate-700"
-                                to="/sign-in"
-                            >
-                                Sign in
-                            </Link>
+                            <div className="flex items-center gap-6">
+                                <Link
+                                    className="font-dm text-sm font-bold text-gray-600 hover:text-gray-900 transition-colors"
+                                    to="/sign-in"
+                                >
+                                    Sign in
+                                </Link>
+                                <Link
+                                    to={'/sign-up'}
+                                    className="bg-emerald-500 text-white px-6 py-2.5 rounded-full font-dm text-sm font-black shadow-xl shadow-emerald-500/30 transition-all duration-300 hover:scale-[1.05] hover:bg-emerald-600 tracking-tight"
+                                >
+                                    Join for Free
+                                </Link>
+                            </div>
                         )}
-                        {
-                            (!isLoggedIn && (<Link
-                                to={'/sign-up'}
-                                className="rounded-md bg-linear-to-br from-green-600 to-emerald-400 px-3 py-1.5 font-dm text-sm font-medium text-white shadow-md shadow-green-400/50 transition-transform duration-200 ease-in-out hover:scale-[1.03]"
-                            >
-                                Sign up for free
-                            </Link>) )
-                        }
-                        {
-                            (isLoggedIn && (<Link
-                                to={'/my-account'}
-                                className="rounded-md bg-linear-to-br from-green-600 to-emerald-400 px-3 py-1.5 font-dm text-sm font-medium text-white shadow-md shadow-green-400/50 transition-transform duration-200 ease-in-out hover:scale-[1.03]"
-                            >
-                                My Account
-                            </Link>) )
-                        }
-
-
                     </div>
+
                     <div className="relative flex items-center justify-center md:hidden">
-                        <button type="button">
+                        <button type="button" className="p-2 hover:bg-white/50 rounded-full transition-colors">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 strokeWidth="1.5"
                                 stroke="currentColor"
-                                aria-hidden="true"
                                 className="h-6 w-auto text-slate-900"
                             >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-                                />
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                             </svg>
                         </button>
                     </div>
