@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ProductList from './components/products/ProductList';
 import { axiosRequest } from './helpers/config';
 import { Truck, Shield, RotateCcw, ShoppingBag } from 'lucide-react';
+import heroBg from './assets/hilly-lake.jpg';
 
 const Home = () => {
     const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -48,7 +49,7 @@ const Home = () => {
                 {/* Background Image */}
                 <div
                     className="absolute inset-0 bg-cover bg-center scale-105"
-                    style={{ backgroundImage: `url('https://picsum.photos/id/1015/1920/1080')` }}
+                    style={{ backgroundImage: `url(${heroBg})` }}
                 />
 
                 {/* Dark Overlay */}
