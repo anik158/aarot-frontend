@@ -3,7 +3,7 @@ import { store } from "../redux/store/index.js";
 import { getGuestToken } from "./guestToken.js";
 
 export const axiosRequest = axios.create({
-    baseURL: "http://e-commerce-laravel.test/api/",
+    baseURL: import.meta.env.VITE_API_URL || "http://e-commerce-laravel.test/api/",
     headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
