@@ -119,6 +119,32 @@ const Checkout = () => {
         return Object.keys(newErrors).length === 0;
     };
 
+    const [couponCode, setCouponCode] = useState('');
+    const [couponData, setCouponData] = useState(null);
+    const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
+
+    const handleApplyCoupon = async () => {
+        if (!couponCode.trim()) {
+            toast.error("Please enter a coupon code");
+            return;
+        }
+
+        setIsApplyingCoupon(true);
+        try {
+            const response = await axiosRequest.post('/coupon/apply', { code: couponCode });
+            if (response.data.success) {
+                setCouponData(response.data.data);
+                toast.success(response.data.message);
+            }
+        } catch (error) {
+            console.error("Coupon error", error);
+            toast.error(error.response?.data?.message || "Invalid coupon code");
+            setCouponData(null);
+        } finally {
+            setIsApplyingCoupon(false);
+        }
+    };
+
     const handlePlaceOrder = async () => {
         if (cartItems.length === 0) {
             toast.error("Your cart is empty!");
@@ -136,6 +162,7 @@ const Checkout = () => {
             address: formData.address,
             city: formData.city,
             payment_method: paymentMethod,
+            coupon_id: couponData ? couponData.id : null,
             cart_items: cartItems.map(item => ({
                 productId: item.productId,
                 colorId: item.colorId,
@@ -183,6 +210,15 @@ const Checkout = () => {
     };
 
     const subtotal = cartItems.reduce((total, item) => total + item.price * item.qty, 0);
+    
+    const calculateDiscount = () => {
+        if (!couponData) return 0;
+        if (couponData.type === 'fixed') return couponData.value;
+        return subtotal * (couponData.value / 100);
+    };
+
+    const discountAmount = calculateDiscount();
+    const finalTotal = subtotal - discountAmount;
 
     if (!isLoggedIn) {
         return <Navigate to="/sign-in" state={{ from: location }} replace />;
@@ -320,11 +356,54 @@ const Checkout = () => {
                         <div className="bg-white/20 backdrop-blur-3xl rounded-[2.5rem] shadow-2xl shadow-gray-200/50 p-12 border border-white/60 sticky top-24 overflow-hidden group">
                             <div className="absolute -top-24 -right-24 w-48 h-48 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none group-hover:bg-emerald-400/20 transition-all duration-700"></div>
                             <h2 className="text-3xl font-black mb-10 text-gray-900 font-dm tracking-tighter relative z-10">Order Summary</h2>
+                            
+                            {/* Coupon Section */}
+                            <div className="mb-8">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Have a coupon code?</label>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="text"
+                                        placeholder="Enter code"
+                                        value={couponCode}
+                                        onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                                        disabled={couponData}
+                                        className="flex-1 border border-white/60 bg-white/20 rounded-xl px-4 py-2 focus:outline-none focus:border-emerald-500 uppercase font-bold"
+                                    />
+                                    {couponData ? (
+                                        <button 
+                                            onClick={() => {setCouponData(null); setCouponCode('');}}
+                                            className="bg-red-500/10 text-red-600 px-4 py-2 rounded-xl text-sm font-bold hover:bg-red-500/20"
+                                        >
+                                            Remove
+                                        </button>
+                                    ) : (
+                                        <button 
+                                            onClick={handleApplyCoupon}
+                                            disabled={isApplyingCoupon}
+                                            className="bg-gray-900 text-white px-6 py-2 rounded-xl text-sm font-bold hover:bg-gray-800 disabled:bg-gray-400 transition-colors"
+                                        >
+                                            {isApplyingCoupon ? '...' : 'Apply'}
+                                        </button>
+                                    )}
+                                </div>
+                                {couponData && (
+                                    <p className="text-emerald-600 text-xs mt-2 font-bold flex items-center gap-1">
+                                        ✨ Code {couponData.code} applied!
+                                    </p>
+                                )}
+                            </div>
+
                             <div className="space-y-4">
                                 <div className="flex justify-between font-medium">
                                     <span className="text-gray-600">Subtotal</span>
                                     <span className="text-gray-900">${subtotal.toFixed(2)}</span>
                                 </div>
+                                {discountAmount > 0 && (
+                                    <div className="flex justify-between font-medium">
+                                        <span className="text-gray-600">Discount ({couponData.type === 'percentage' ? `${couponData.value}%` : 'Fixed'})</span>
+                                        <span className="text-red-500">-${discountAmount.toFixed(2)}</span>
+                                    </div>
+                                )}
                                 <div className="flex justify-between font-medium">
                                     <span className="text-gray-600">Shipping</span>
                                     <span className="text-emerald-500">Free</span>
@@ -332,7 +411,7 @@ const Checkout = () => {
                                 <hr className="border-gray-200/50" />
                                 <div className="flex justify-between text-xl font-black text-gray-900">
                                     <span>Total</span>
-                                    <span>${subtotal.toFixed(2)}</span>
+                                    <span>${finalTotal.toFixed(2)}</span>
                                 </div>
                             </div>
                             
