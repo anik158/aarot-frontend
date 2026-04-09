@@ -68,8 +68,8 @@ const SignInForm = () => {
             }
 
             // Update Redux state AFTER cart is merged so Header can refetch correctly
-            dispatch(setCurrentUser(user));
             dispatch(setToken(access_token));
+            dispatch(setCurrentUser(user));
 
             const from = location.state?.from?.pathname || '/';
             navigate(from, { replace: true });

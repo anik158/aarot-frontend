@@ -40,7 +40,7 @@ const Header = () => {
             }
         };
         fetchCartCount();
-    }, [dispatch, isLoggedIn]);
+    }, [dispatch, isLoggedIn, token]);
 
     const handleLogout = async () => {
         try {
@@ -58,8 +58,8 @@ const Header = () => {
 
     return (
         <>
-            <header className="App-Header fixed top-0 sm:top-6 inset-x-0 z-50 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto mt-4 sm:mt-0">
-                <nav className="flex items-center gap-8 bg-white/40 backdrop-blur-3xl border border-white/60 rounded-[2.5rem] p-4 px-8 lg:px-12 shadow-2xl shadow-gray-200/50 transition-all duration-300 hover:bg-white/50">
+            <header className="App-Header fixed top-0 sm:top-6 inset-x-0 z-50 px-0 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <nav className="flex items-center gap-8 bg-white/40 backdrop-blur-3xl border-b sm:border border-white/60 sm:rounded-[2.5rem] p-4 px-6 sm:px-8 lg:px-12 shadow-2xl shadow-gray-200/50 transition-all duration-300 hover:bg-white/50">
                     <div className="relative flex items-center">
                         <Link to={'/'} className="hover:scale-110 transition-transform flex items-center gap-3">
                             <img
