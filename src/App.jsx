@@ -17,6 +17,7 @@ import AllProducts from "./pages/AllProducts.jsx";
 import MyAccount from "./pages/MyAccount.jsx";
 import Footer from "./components/footer/Footer.jsx";
 import ProtectedRoute from "./components/auth/ProtectedRoute.jsx";
+import ScrollToTop from "./components/helpers/ScrollToTop.jsx";
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
       <Provider store={store}>
           <PersistGate persistor={persistStorage}>
               <BrowserRouter>
+                  <ScrollToTop />
                   <Header/>
                   <Routes>
                       <Route path="/" element={<Home />} />

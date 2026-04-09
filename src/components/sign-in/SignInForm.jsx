@@ -44,16 +44,15 @@ const SignInForm = () => {
         const handleSuccess = async (response) => {
             const { user, access_token } = response.data.data;
 
-            dispatch(setCurrentUser(user));
-            dispatch(setToken(access_token));
-
             try {
                 const guestToken = localStorage.getItem('guest_token');
 
                 if (guestToken) {
+                    // Send merge request using the new user's token directly
                     await axiosRequest.post('/cart/merge', {}, {
                         headers: {
-                            'X-Guest-Token': guestToken
+                            'X-Guest-Token': guestToken,
+                            'Authorization': `Bearer ${access_token}`
                         }
                     });
 
@@ -67,6 +66,10 @@ const SignInForm = () => {
                 console.error("Cart merge failed:", mergeError);
                 toast.success(response.data.message || "Logged in successfully!");
             }
+
+            // Update Redux state AFTER cart is merged so Header can refetch correctly
+            dispatch(setCurrentUser(user));
+            dispatch(setToken(access_token));
 
             const from = location.state?.from?.pathname || '/';
             navigate(from, { replace: true });
