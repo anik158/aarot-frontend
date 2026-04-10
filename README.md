@@ -1,16 +1,39 @@
-# React + Vite
+# Aarot (React + Vite)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive, and performance-optimized E-commerce storefront built with React and Redux.
 
-Currently, two official plugins are available:
+## 🌟 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Global State Management**: Powered by **Redux Toolkit** for consistent data across the entire application.
+- **Dynamic Cart Experience**: 
+  - Real-time cart updates without page refreshes.
+  - Seamlessly handles Guest-to-User cart merging via backend synchronization.
+- **Premium UI/UX**:
+  - Fully responsive design using **Tailwind CSS**.
+  - Glassmorphic UI elements and smooth loading transitions.
+  - **Scroll Restoration**: Automatic "Scroll to Top" behavior for a true SPA feel.
+- **Secure Authentication**: Integrated with Laravel Passport for persistent, secure user sessions.
+- **Smart Components**: Centralized Header with live cart count and intelligent redirection logic.
 
-## React Compiler
+## 🚀 Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Framework**: React 18+ (Vite)
+- **State**: Redux Toolkit & Redux Persist
+- **Styling**: Tailwind CSS / Lucide Icons
+- **Routing**: React Router 6
+- **HTTP Client**: Axios (with centralized interceptors for Auth/Guest headers)
 
-## Expanding the ESLint configuration
+## 🏁 Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. **Clone the repository**
+2. **Install dependencies**: `npm install`
+3. **Setup environment**: Create a `.env` file with `VITE_API_URL`.
+4. **Run Development**: `npm run dev`
+5. **Build for Production**: `npm run build`
+
+## 📂 Project Structure
+
+- `/src/components`: UI components (Layouts, Products, Carts, Checkout)
+- `/src/redux`: Slices and Store configuration
+- `/src/helpers`: API configuration and helper utilities
+- `/src/pages`: Page-level components
