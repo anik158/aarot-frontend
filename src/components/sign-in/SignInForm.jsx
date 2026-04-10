@@ -106,7 +106,7 @@ const SignInForm = () => {
                         });
                     });
                 }else {
-                    toast.error("Unexpected error occurred. Please try again.");
+                    console.log('Unexpected error occurred. Please try again.');
                 }
             }
         } finally {

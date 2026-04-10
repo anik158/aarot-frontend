@@ -13,9 +13,9 @@ const Cart = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [updatingItems, setUpdatingItems] = useState(new Set());
 
-    const fetchCart = async () => {
+    const fetchCart = async (isInitial = false) => {
         try {
-            setIsLoading(true);
+            if (isInitial) setIsLoading(true);
             const response = await axiosRequest.get('/cart');
 
             if (response.data.success) {
@@ -44,12 +44,12 @@ const Cart = () => {
             console.error(error);
             toast.error("Failed to load cart");
         } finally {
-            setIsLoading(false);
+            if (isInitial) setIsLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchCart();
+        fetchCart(true);
     }, []);
 
     const updateQuantity = async (item, newQty) => {
@@ -66,7 +66,7 @@ const Cart = () => {
                 qty: newQty
             });
 
-            await fetchCart();   // Refresh from backend
+            await fetchCart(false);   // Refresh from backend without unmounting
             toast.success("Quantity updated");
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to update quantity");
@@ -90,7 +90,7 @@ const Cart = () => {
                 size_id: item.sizeId
             });
 
-            await fetchCart();
+            await fetchCart(false);
             toast.success("Item removed from cart");
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to remove item");
