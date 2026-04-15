@@ -24,14 +24,11 @@ const Cart = () => {
                 // Normalize data
                 items = items.map((item, index) => ({
                     productId: item.productId || item.product_id || `temp-${index}`,
-                    colorId: item.colorId || item.color_id || null,
-                    sizeId: item.sizeId || item.size_id || null,
+                    options: item.options || {},
                     qty: parseInt(item.qty || item.quantity) || 1,
                     price: parseFloat(item.price) || 0,
                     title: item.title || "Unknown Product",
                     image: item.image || null,
-                    colorName: item.colorName || item.color_name || "N/A",
-                    sizeName: item.sizeName || item.size_name || "N/A",
                 }));
 
                 setCartItems(items);
@@ -55,14 +52,14 @@ const Cart = () => {
     const updateQuantity = async (item, newQty) => {
         if (newQty < 1) return;
 
-        const key = `${item.productId}-${item.colorId || 0}-${item.sizeId || 0}`;
+        const optionsKey = Object.entries(item.options || {}).sort().map(([k,v]) => `${k}:${v}`).join('|');
+        const key = `${item.productId}-${optionsKey}`;
         setUpdatingItems(prev => new Set(prev).add(key));
 
         try {
             await axiosRequest.post('/cart/update', {
                 product_id: item.productId,
-                color_id: item.colorId,
-                size_id: item.sizeId,
+                options: item.options,
                 qty: newQty
             });
 
@@ -80,14 +77,14 @@ const Cart = () => {
     };
 
     const removeItem = async (item) => {
-        const key = `${item.productId}-${item.colorId || 0}-${item.sizeId || 0}`;
+        const optionsKey = Object.entries(item.options || {}).sort().map(([k,v]) => `${k}:${v}`).join('|');
+        const key = `${item.productId}-${optionsKey}`;
         setUpdatingItems(prev => new Set(prev).add(key));
 
         try {
             await axiosRequest.post('/cart/remove', {
                 product_id: item.productId,
-                color_id: item.colorId,
-                size_id: item.sizeId
+                options: item.options
             });
 
             await fetchCart(false);
@@ -118,8 +115,7 @@ const Cart = () => {
                         <thead>
                         <tr className="text-center border-b border-gray-400 text-[#7f7f7f] text-sm font-medium uppercase">
                             <th className="text-left px-2 py-2">Product</th>
-                            <th className="px-2 py-2">Color</th>
-                            <th className="px-2 py-2">Size</th>
+                            <th className="px-2 py-2">Options</th>
                             <th className="px-2 py-2">Price</th>
                             <th className="px-2 py-2">Quantity</th>
                             <th className="px-2 py-2">Subtotal</th>
@@ -129,7 +125,8 @@ const Cart = () => {
                         <tbody>
                         {cartItems.map((item) => {
                             const subtotal = item.price * item.qty;
-                            const key = `${item.productId}-${item.colorId || 0}-${item.sizeId || 0}`;
+                            const optionsKey = Object.entries(item.options || {}).sort().map(([k,v]) => `${k}:${v}`).join('|');
+                            const key = `${item.productId}-${optionsKey}`;
                             const isUpdating = updatingItems.has(key);
 
                             return (
@@ -148,8 +145,11 @@ const Cart = () => {
                                         )}
                                         <span className="block mt-1 font-medium">{item.title}</span>
                                     </td>
-                                    <td className="px-2 py-2">{item.colorName}</td>
-                                    <td className="px-2 py-2">{item.sizeName}</td>
+                                    <td className="px-2 py-2 text-sm text-gray-500">
+                                        {Object.entries(item.options || {}).map(([key, val]) => (
+                                            <div key={key}><strong>{key}:</strong> {val}</div>
+                                        ))}
+                                    </td>
                                     <td className="px-2 py-2">${Number(item.price).toFixed(2)}</td>
                                     <td className="p-2">
                                         <div className="flex items-center justify-center gap-3 border rounded-full px-4 py-1">

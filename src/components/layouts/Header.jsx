@@ -25,14 +25,11 @@ const Header = () => {
                     let items = response.data.data || [];
                     items = items.map((item, index) => ({
                         productId: item.productId || item.product_id || `temp-${index}`,
-                        colorId: item.colorId || item.color_id || null,
-                        sizeId: item.sizeId || item.size_id || null,
+                        options: item.options || {},
                         qty: parseInt(item.qty || item.quantity) || 1,
                         price: parseFloat(item.price) || 0,
                         title: item.title || "Unknown Product",
                         image: item.image || null,
-                        colorName: item.colorName || item.color_name || "N/A",
-                        sizeName: item.sizeName || item.size_name || "N/A",
                     }));
                     dispatch(setCartItems(items));
                 }

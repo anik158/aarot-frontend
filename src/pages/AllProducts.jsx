@@ -5,16 +5,15 @@ import CustomSelect from '../components/common/CustomSelect';
 
 const AllProducts = () => {
     const [products, setProducts] = useState([]);
-    const [colors, setColors] = useState([]);
-    const [sizes, setSizes] = useState([]);
-    const [categories, setCategories] = useState([]);   // New
+    const [categories, setCategories] = useState([]);  
     const [loading, setLoading] = useState(true);
 
     // Filters
     const [selectedCategory, setSelectedCategory] = useState('');
-    const [selectedSize, setSelectedSize] = useState('');
-    const [selectedColor, setSelectedColor] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
+
+    const [attributes, setAttributes] = useState([]);
+    const [selectedOptions, setSelectedOptions] = useState({});
 
     useEffect(() => {
         const fetchAll = async () => {
@@ -23,14 +22,16 @@ const AllProducts = () => {
                 const params = new URLSearchParams();
 
                 if (selectedCategory) params.append('category', selectedCategory);
-                if (selectedSize) params.append('size', selectedSize);
-                if (selectedColor) params.append('color', selectedColor);
                 if (searchTerm) params.append('search', searchTerm);
+                
+                Object.values(selectedOptions).forEach(optionId => {
+                    if (optionId) {
+                        params.append('options[]', optionId);
+                    }
+                });
 
                 const url = `products${params.toString() ? '?' + params.toString() : ''}`;
                 const response = await axiosRequest.get(url);
-
-                console.log('res', response);
 
                 setProducts(response.data.data || []);
             } catch (e) {
@@ -41,28 +42,46 @@ const AllProducts = () => {
         };
 
         fetchAll();
-    }, [selectedCategory, selectedSize, selectedColor, searchTerm]);
+    }, [selectedCategory, searchTerm, selectedOptions]);
 
+    // Fetch Categories (Once)
     useEffect(() => {
-        const fetchAll = async () => {
+        const fetchCategories = async () => {
             try {
-                const [catRes, sizeRes, colorRes] = await Promise.all([
-                    axiosRequest.get('/categories'),
-                    axiosRequest.get('/sizes'),
-                    axiosRequest.get('/colors'),
-                ]);
-
-                if (catRes.data.success) setCategories(catRes.data.data);
-                if (sizeRes.data.success) setSizes(sizeRes.data.data);
-                if (colorRes.data.success) setColors(colorRes.data.data);
+                const response = await axiosRequest.get('/categories');
+                if (response.data.success) setCategories(response.data.data);
             } catch (error) {
                 console.error(error);
             }
         };
-
-        fetchAll();
+        fetchCategories();
     }, []);
 
+    // Fetch Dynamic Attributes
+    useEffect(() => {
+        const fetchAttributes = async () => {
+            try {
+                const url = selectedCategory ? `/attributes?category_id=${selectedCategory}` : '/attributes';
+                const response = await axiosRequest.get(url);
+                if (response.data.success) {
+                    setAttributes(response.data.data);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        
+        // Reset selections when category changes
+        setSelectedOptions({});
+        fetchAttributes();
+    }, [selectedCategory]);
+
+    const handleOptionSelect = (attrId, valueId) => {
+        setSelectedOptions(prev => ({
+            ...prev,
+            [attrId]: valueId
+        }));
+    };
 
     return (
         <div className="max-w-7xl mx-auto px-6 py-12">
@@ -81,21 +100,16 @@ const AllProducts = () => {
                     placeholder="All Categories"
                 />
 
-                <CustomSelect
-                    label="Sizes"
-                    value={selectedSize}
-                    options={sizes}
-                    onChange={setSelectedSize}
-                    placeholder="All Sizes"
-                />
-
-                <CustomSelect
-                    label="Colors"
-                    value={selectedColor}
-                    options={colors}
-                    onChange={setSelectedColor}
-                    placeholder="All Colors"
-                />
+                {attributes.map(attr => (
+                    <CustomSelect
+                        key={attr.id}
+                        label={attr.name}
+                        value={selectedOptions[attr.id] || ''}
+                        options={attr.values}
+                        onChange={(val) => handleOptionSelect(attr.id, val)}
+                        placeholder={`All ${attr.name}`}
+                    />
+                ))}
 
                 <input
                     type="text"
@@ -105,13 +119,12 @@ const AllProducts = () => {
                     className="border border-gray-300 rounded-2xl px-5 py-3.5 focus:outline-none focus:border-emerald-500 flex-1 min-w-[300px]"
                 />
 
-                {(selectedCategory || selectedSize || selectedColor || searchTerm) && (
+                {(selectedCategory || searchTerm || Object.keys(selectedOptions).length > 0) && (
                     <button
                         onClick={() => {
                             setSelectedCategory('');
-                            setSelectedSize('');
-                            setSelectedColor('');
                             setSearchTerm('');
+                            setSelectedOptions({});
                         }}
                         className="text-red-600 hover:text-red-700 font-medium px-6"
                     >

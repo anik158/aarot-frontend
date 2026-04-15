@@ -15,8 +15,7 @@ const Product = () => {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selectedColor, setSelectedColor] = useState(null);
-  const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedOptions, setSelectedOptions] = useState({});
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
   const dispatch = useDispatch();
@@ -24,19 +23,41 @@ const Product = () => {
   const [isFavorite, setIsFavorite] = useState(false);
   const isLoggedIn = useSelector(state => state.user.isLoggedIn);
 
+  // Group attributes: { "Storage": [ {id:1, value:"128GB"}, ... ], "Color": [...] }
+  const groupedAttributes = product?.attribute_values?.reduce((acc, item) => {
+      if (!item.attribute) return acc;
+      const attrName = item.attribute.name;
+      if (!acc[attrName]) acc[attrName] = [];
+      acc[attrName].push(item);
+      return acc;
+  }, {}) || {};
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
         const response = await axiosRequest.get(`products/${productId}`);
-        setProduct(response.data.data);
+        const fetchedProduct = response.data.data;
+        setProduct(fetchedProduct);
         
-        if (response.data.data.colors?.length > 0) {
-          setSelectedColor(response.data.data.colors[0].id);
-        }
-        if (response.data.data.sizes?.length > 0) {
-          setSelectedSize(response.data.data.sizes[0].id);
-        }
+        // Auto-select first option for each attribute
+        const initialSelections = {};
+        const attrs = fetchedProduct.attribute_values?.reduce((acc, item) => {
+            if (!item.attribute) return acc;
+            const attrName = item.attribute.name;
+            if (!acc[attrName]) acc[attrName] = [];
+            acc[attrName].push(item);
+            return acc;
+        }, {}) || {};
+
+        Object.keys(attrs).forEach(attrName => {
+            if (attrs[attrName].length > 0) {
+                initialSelections[attrName] = attrs[attrName][0].value;
+            }
+        });
+        
+        setSelectedOptions(initialSelections);
+
       } catch (error) {
         console.error('Error fetching product:', error);
       } finally {
@@ -59,16 +80,27 @@ const Product = () => {
     fetchFavoriteStatus();
   }, [productId, isLoggedIn]);
 
+  const handleOptionSelect = (attributeName, value) => {
+      setSelectedOptions(prev => ({
+          ...prev,
+          [attributeName]: value
+      }));
+  };
+
   const handleAddToCart = async () => {
-    if (!selectedColor || !selectedSize) {
-      toast.error("Please select color and size");
+    // Validate all attributes have a selection
+    const missingSelections = Object.keys(groupedAttributes).filter(
+        attr => !selectedOptions[attr]
+    );
+
+    if (missingSelections.length > 0) {
+      toast.error(`Please select ${missingSelections.join(' and ')}`);
       return;
     }
 
     const payload = {
       product_id: product.id,
-      color_id: selectedColor,
-      size_id: selectedSize,
+      options: selectedOptions,
       qty: quantity,
     };
 
@@ -82,13 +114,13 @@ const Product = () => {
         
         dispatch(addToCart({
             productId: product.id,
-            colorId: selectedColor,
-            sizeId: selectedSize,
+            options: selectedOptions,
             qty: quantity,
+            price: parseFloat(product.price),
+            title: product.name,
+            image: product.first_image || product.image,
         }));
 
-        setSelectedColor(null);
-        setSelectedSize(null);
         setQuantity(1);
       }
     } catch (error) {
@@ -231,17 +263,28 @@ const Product = () => {
                 {product.description || 'No description available for this product.'}
               </p>
 
-              <ColorSelector 
-                colors={product.colors} 
-                selectedColor={selectedColor} 
-                onColorSelect={setSelectedColor} 
-              />
-
-              <SizeSelector 
-                sizes={product.sizes} 
-                selectedSize={selectedSize} 
-                onSizeSelect={setSelectedSize} 
-              />
+              {Object.keys(groupedAttributes).map((attrName) => (
+                  <div key={attrName} className="mb-6">
+                      <h3 className="text-sm font-medium text-gray-900 mb-3 uppercase tracking-wide">
+                          {attrName}: <span className="font-bold">{selectedOptions[attrName]}</span>
+                      </h3>
+                      <div className="flex flex-wrap gap-3">
+                          {groupedAttributes[attrName].map((item) => (
+                              <button
+                                  key={item.id}
+                                  onClick={() => handleOptionSelect(attrName, item.value)}
+                                  className={`px-4 py-2 border rounded-xl text-sm font-medium transition-all ${
+                                      selectedOptions[attrName] === item.value
+                                          ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
+                                          : 'border-gray-200 bg-white text-gray-700 hover:border-emerald-500 hover:text-emerald-600'
+                                  }`}
+                              >
+                                  {item.value}
+                              </button>
+                          ))}
+                      </div>
+                  </div>
+              ))}
 
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <QuantitySelector 
@@ -251,7 +294,11 @@ const Product = () => {
                 />
                 <button
                     onClick={handleAddToCart}
-                  disabled={product.status !== 1 || product.qty === 0 || !selectedColor || !selectedSize}
+                  disabled={
+                    product.status !== 1 || 
+                    product.qty === 0 || 
+                    Object.keys(groupedAttributes).some(attr => !selectedOptions[attr])
+                  }
                   className="flex-1 bg-emerald-400 hover:bg-emerald-600 text-white py-3 px-8 rounded-xl font-semibold  hover:cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
                 >
                   <ShoppingCart className="w-5 h-5" />

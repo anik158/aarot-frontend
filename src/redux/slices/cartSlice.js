@@ -2,6 +2,18 @@ import {createSlice} from "@reduxjs/toolkit";
 import {toast} from "react-toastify";
 
 
+const isSameOptions = (opt1, opt2) => {
+    opt1 = opt1 || {};
+    opt2 = opt2 || {};
+    const keys1 = Object.keys(opt1).sort();
+    const keys2 = Object.keys(opt2).sort();
+    if (keys1.length !== keys2.length) return false;
+    for (let key of keys1) {
+        if (opt1[key] !== opt2[key]) return false;
+    }
+    return true;
+};
+
 const initialState = {
     cartItems: [],
     validCoupon: {
@@ -19,8 +31,7 @@ export const cartSlice = createSlice({
 
             const productItem = state.cartItems.find(product =>
                 product.productId === item.productId &&
-                product.colorId  === item.colorId  &&
-                product.sizeId   === item.sizeId
+                isSameOptions(product.options, item.options)
             );
 
             if (productItem) {
@@ -31,23 +42,22 @@ export const cartSlice = createSlice({
             }
         },
        removeFromCart: (state, action) => {
-            const {productId, colorId, sizeId} = action.payload;
+            const {productId, options} = action.payload;
             state.cartItems = state.cartItems.filter((item) => {
                 return !(
                     item.productId === productId &&
-                    item.colorId === colorId &&
-                    item.sizeId === sizeId)
+                    isSameOptions(item.options, options)
+                )
            })
 
            toast.warn('Product removed from cart');
        },
         increaseQuantity: (state, action) => {
-            const { productId, colorId, sizeId } = action.payload;
+            const { productId, options } = action.payload;
             const existingItem = state.cartItems.find(
                 (item) =>
                     item.productId === productId &&
-                    item.colorId === colorId &&
-                    item.sizeId === sizeId
+                    isSameOptions(item.options, options)
             );
             if (existingItem && existingItem.qty < existingItem.maxQty) {
                 existingItem.qty++;
@@ -56,19 +66,18 @@ export const cartSlice = createSlice({
             }
         },
         decreaseQuantity: (state, action) => {
-            const { productId, colorId, sizeId } = action.payload;
+            const { productId, options } = action.payload;
             const existingItem = state.cartItems.find(
                 (item) =>
                     item.productId === productId &&
-                    item.colorId === colorId &&
-                    item.sizeId === sizeId
+                    isSameOptions(item.options, options)
             );
             if (existingItem && existingItem.qty > 1) {
                 existingItem.qty--;
             } else if (existingItem && existingItem.qty === 1) {
                 state.cartItems = state.cartItems.filter(
                     (item) =>
-                        !(item.productId === productId && item.colorId === colorId && item.sizeId === sizeId)
+                        !(item.productId === productId && isSameOptions(item.options, options))
                 );
                 toast.info(`${existingItem.title} removed from cart`);
             }

@@ -32,14 +32,11 @@ const Checkout = () => {
                     
                     items = items.map((item, index) => ({
                         productId: item.productId || item.product_id || `temp-${index}`,
-                        colorId: item.colorId || item.color_id || null,
-                        sizeId: item.sizeId || item.size_id || null,
+                        options: item.options || {},
                         qty: parseInt(item.qty || item.quantity) || 1,
                         price: parseFloat(item.price) || 0,
                         title: item.title || "Unknown Product",
                         image: item.image || null,
-                        colorName: item.colorName || item.color_name || "N/A",
-                        sizeName: item.sizeName || item.size_name || "N/A",
                     }));
                     setCartItems(items);
                 }
@@ -165,8 +162,7 @@ const Checkout = () => {
             coupon_id: couponData ? couponData.id : null,
             cart_items: cartItems.map(item => ({
                 productId: item.productId,
-                colorId: item.colorId,
-                sizeId: item.sizeId,
+                options: item.options,
                 qty: item.qty,
                 price: item.price,
             }))
@@ -335,19 +331,27 @@ const Checkout = () => {
                         <div className="bg-white/40 backdrop-blur-3xl border border-white/50 rounded-[2.5rem] p-10 shadow-2xl shadow-gray-200/50">
                             <h2 className="text-2xl font-black mb-10 text-gray-900 font-dm tracking-tight">Order Items</h2>
                             <div className="space-y-6">
-                                {cartItems.map((item) => (
-                                    <div key={`${item.productId}-${item.colorId}-${item.sizeId}`} className="flex gap-4 border-b pb-6 last:border-b-0">
-                                        <img src={item.image} alt={item.title} className="w-24 h-24 object-cover rounded-lg border" />
-                                        <div className="flex-1">
-                                            <h3 className="font-medium">{item.title}</h3>
-                                            <p className="text-sm text-gray-500">{item.colorName} • {item.sizeName}</p>
-                                            <p className="text-sm mt-1">Qty: {item.qty}</p>
+                                {cartItems.map((item) => {
+                                    const optionsKey = Object.entries(item.options || {}).sort().map(([k,v]) => `${k}:${v}`).join('|');
+                                    const key = `${item.productId}-${optionsKey}`;
+                                    return (
+                                        <div key={key} className="flex gap-4 border-b pb-6 last:border-b-0">
+                                            <img src={item.image} alt={item.title} className="w-24 h-24 object-cover rounded-lg border" />
+                                            <div className="flex-1">
+                                                <h3 className="font-medium">{item.title}</h3>
+                                                <div className="text-sm text-gray-500 mt-1">
+                                                    {Object.entries(item.options || {}).map(([key, val]) => (
+                                                        <span key={key} className="mr-3"><strong>{key}:</strong> {val}</span>
+                                                    ))}
+                                                </div>
+                                                <p className="text-sm mt-1">Qty: {item.qty}</p>
+                                            </div>
+                                            <div className="font-semibold text-emerald-600">
+                                                ${(item.price * item.qty).toFixed(2)}
+                                            </div>
                                         </div>
-                                        <div className="font-semibold text-emerald-600">
-                                            ${(item.price * item.qty).toFixed(2)}
-                                        </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         </div>
                     </div>
