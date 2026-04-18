@@ -92,7 +92,7 @@ const OrderConfirmation = ()=> {
                                         <h3 className="font-medium">{item.title || item.product?.name}</h3>
                                         <p className="text-sm text-gray-500 italic">
                                             {item.options && Object.entries(item.options).map(([k, v], i, arr) => (
-                                                <span key={k}>{k}: {v}{i < arr.length - 1 ? ' • ' : ''}</span>
+                                                <span key={k}>{k}: <span className="uppercase">{v}</span>{i < arr.length - 1 ? ' • ' : ''}</span>
                                             ))}
                                         </p>
                                         <p className="text-sm">Qty: {item.quantity}</p>
