@@ -266,14 +266,14 @@ const Product = () => {
               {Object.keys(groupedAttributes).map((attrName) => (
                   <div key={attrName} className="mb-6">
                       <h3 className="text-sm font-medium text-gray-900 mb-3 uppercase tracking-wide">
-                          {attrName}: <span className="font-bold">{selectedOptions[attrName]}</span>
+                          {attrName}: <span className="font-bold uppercase">{selectedOptions[attrName]}</span>
                       </h3>
                       <div className="flex flex-wrap gap-3">
                           {groupedAttributes[attrName].map((item) => (
                               <button
                                   key={item.id}
                                   onClick={() => handleOptionSelect(attrName, item.value)}
-                                  className={`px-4 py-2 border rounded-xl text-sm font-medium transition-all ${
+                                  className={`px-4 py-2 border rounded-xl text-sm font-medium transition-all uppercase ${
                                       selectedOptions[attrName] === item.value
                                           ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
                                           : 'border-gray-200 bg-white text-gray-700 hover:border-emerald-500 hover:text-emerald-600'

@@ -91,9 +91,16 @@ const OrderConfirmation = ()=> {
                                     <div className="flex-1">
                                         <h3 className="font-medium">{item.title || item.product?.name}</h3>
                                         <p className="text-sm text-gray-500 italic">
-                                            {item.options && Object.entries(item.options).map(([k, v], i, arr) => (
-                                                <span key={k}>{k}: <span className="uppercase">{v}</span>{i < arr.length - 1 ? ' • ' : ''}</span>
-                                            ))}
+                                            {(() => {
+                                                let opts = item.options || {};
+                                                // Handle potential double-encoding strings from legacy orders
+                                                if (typeof opts === 'string') {
+                                                    try { opts = JSON.parse(opts); } catch(e) {}
+                                                }
+                                                return Object.entries(opts).map(([k, v], i, arr) => (
+                                                    <span key={k} className="uppercase">{k}: {v}{i < arr.length - 1 ? ' • ' : ''}</span>
+                                                ));
+                                            })()}
                                         </p>
                                         <p className="text-sm">Qty: {item.quantity}</p>
                                     </div>
